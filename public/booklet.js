@@ -1,8 +1,29 @@
-import { clampPage, swipeDirection } from './booklet-state.js';
+import { clampPage, swipeDirection, visibleChapters, pageHint } from './booklet-state.js';
 
 const book = document.querySelector('#invitation-book');
+const traditionSection = document.querySelector('#traditions');
+const traditionCards = [...traditionSection.querySelectorAll('.ritual-card')];
+const traditionLabels = ['Roses', 'Candles', 'Bluebills', 'Wines & shots'];
+for (const [index, card] of traditionCards.entries()) {
+  const section = document.createElement('section');
+  section.id = index === 0 ? 'traditions' : ['','candles','bluebills','wines-shots'][index];
+  section.className = 'section tradition-chapter';
+  section.dataset.chapterLabel = traditionLabels[index];
+  const intro = document.createElement('div'); intro.className = 'ritual-intro';
+  const eyebrow = document.createElement('p'); eyebrow.className = 'eyebrow';
+  eyebrow.textContent = `THE EIGHTEEN / ${String(index + 1).padStart(2,'0')} OF 04`;
+  const heading = document.createElement('h2'); heading.textContent = card.querySelector('h3').textContent;
+  const note = document.createElement('p'); note.className = 'ritual-note';
+  note.textContent = ['Eighteen gestures of love, shared with the people closest to my heart.', 'Eighteen lights, wishes, and treasures for the chapter ahead.', 'Eighteen blessings, offered with love and beautiful intentions.', 'Eighteen toasts to friendship, joy, and a world of possibilities.'][index];
+  const crest = document.createElement('img'); crest.src='/crystal.svg';crest.alt='';crest.className='ritual-crest';
+  intro.append(eyebrow,heading,note,crest);
+  card.querySelector('h3').textContent='Our honored participants';
+  section.append(intro,card); traditionSection.before(section);
+}
+traditionSection.remove();
 const pages = [...book.querySelectorAll(':scope > section')];
-const labels = ['The cover', 'For you', 'The evening', 'The attire', 'The eighteen', 'Your reply'];
+const defaultLabels = {home:'The cover', dedication:'For you', details:'The evening', attire:'The attire', rsvp:'Your reply'};
+const labels = pages.map(page=>page.dataset.chapterLabel || defaultLabels[page.id]);
 const controls = document.querySelector('.book-controls');
 const tabs = document.querySelector('#chapter-tabs');
 const previous = document.querySelector('#previous-page');
@@ -20,6 +41,18 @@ bookmark.textContent = 'RSVP';
 bookmark.setAttribute('aria-label', 'Turn to the RSVP page');
 book.append(bookmark);
 let current = 0, busy = false, gesture;
+const coarsePointer = matchMedia('(pointer: coarse)');
+const toolbar = document.createElement('div');toolbar.className='chapter-toolbar';
+const menuButton = document.createElement('button');menuButton.className='contents-button';menuButton.textContent='Chapters';menuButton.setAttribute('aria-haspopup','dialog');
+tabs.before(toolbar);toolbar.append(menuButton,tabs);
+const menu = document.createElement('dialog');menu.id='contents-dialog';menu.setAttribute('aria-labelledby','contents-title');
+const menuHeader=document.createElement('div');menuHeader.className='contents-heading';
+const menuTitle=document.createElement('h2');menuTitle.id='contents-title';menuTitle.textContent='Inside the invitation';
+const closeMenu=document.createElement('button');closeMenu.className='contents-close';closeMenu.textContent='×';closeMenu.setAttribute('aria-label','Close chapters');
+menuHeader.append(menuTitle,closeMenu);const menuList=document.createElement('div');menuList.className='contents-list';
+menu.append(menuHeader,menuList);document.body.append(menu);
+menuButton.onclick=()=>menu.showModal();closeMenu.onclick=()=>menu.close();
+menu.addEventListener('click',event=>{if(event.target===menu)menu.close()});
 
 pages.forEach((page, index) => {
   page.classList.add('book-page');
@@ -27,6 +60,19 @@ pages.forEach((page, index) => {
   page.setAttribute('aria-label', `Page ${index + 1}: ${labels[index]}`);
   page.querySelector('h1, h2')?.setAttribute('tabindex', '-1');
   viewport.append(page);
+  if(index < pages.length-1) {
+    const end=document.createElement('button');end.className='chapter-end';
+    const line=document.createElement('span');line.className='chapter-end-kicker';line.textContent='THE NEXT CHAPTER';
+    const label=document.createElement('strong');label.textContent=labels[index+1];
+    const instruction=document.createElement('span');instruction.className='chapter-end-instruction';
+    instruction.textContent=coarsePointer.matches?'Swipe left or tap to continue →':'Continue to the next chapter →';
+    end.append(line,label,instruction);end.onclick=()=>turn(index+1);page.append(end);
+  }
+  page.addEventListener('scroll', updateReading, {passive:true});
+  const menuItem=document.createElement('button');menuItem.className='contents-item';
+  const menuNumber=document.createElement('span');menuNumber.textContent=String(index+1).padStart(2,'0');
+  const menuLabel=document.createElement('span');menuLabel.textContent=labels[index];
+  menuItem.append(menuNumber,menuLabel);menuItem.onclick=()=>{menu.close();turn(index)};menuList.append(menuItem);
   const tab = document.createElement('button');
   tab.className = 'chapter-tab';
   tab.textContent = String(index + 1).padStart(2, '0');
@@ -37,11 +83,15 @@ pages.forEach((page, index) => {
 });
 
 function update() {
+  menuButton.disabled = busy;
   previous.disabled = current === 0 || busy;
   next.disabled = current === pages.length - 1 || busy;
   next.querySelector('span').textContent = current === 0 ? 'Open book' : current === pages.length - 2 ? 'Your reply' : 'Next';
-  caption.textContent = `${String(current + 1).padStart(2, '0')} / ${String(pages.length).padStart(2, '0')} · ${labels[current]}`;
+  const pageCaption = `${String(current + 1).padStart(2, '0')} / ${String(pages.length).padStart(2, '0')} · ${labels[current]}`;
+  if (caption.textContent !== pageCaption) caption.textContent = pageCaption;
+  const visible = visibleChapters(current,pages.length);
   [...tabs.children].forEach((tab, index) => {
+    tab.hidden = !visible.includes(index);
     tab.disabled = busy;
     if (index === current) tab.setAttribute('aria-current', 'page');
     else tab.removeAttribute('aria-current');
@@ -50,10 +100,22 @@ function update() {
     if (link.hash === `#${pages[current].id}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
-  const page = pages[current];
-  hint.textContent = page.scrollHeight > page.clientHeight + 12
-    ? 'Scroll this page · Swipe to turn'
-    : current === pages.length - 1 ? 'Your place in the story' : 'Swipe to turn · Tap a chapter above';
+  [...menuList.children].forEach((item,index)=>{
+    if(index===current)item.setAttribute('aria-current','page');else item.removeAttribute('aria-current');
+  });
+  updateReading();
+}
+
+function updateReading() {
+  const page=pages[current];
+  const scrollable=page.scrollHeight>page.clientHeight+12;
+  const atEnd=!scrollable || page.scrollTop+page.clientHeight>=page.scrollHeight-90;
+  const distance=page.scrollHeight-page.clientHeight;
+  controls.style.setProperty('--reading-progress',String(distance>0?Math.min(1,page.scrollTop/distance):1));
+  hint.textContent=pageHint({scrollable,atEnd,hasNext:current<pages.length-1,nextLabel:labels[current+1],touch:coarsePointer.matches});
+  page.querySelector('.chapter-end')?.classList.toggle('is-ready',atEnd);
+  book.classList.toggle('chapter-at-end',atEnd);
+
 }
 
 async function turn(target, { focus = true, animate = true } = {}) {

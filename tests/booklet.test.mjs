@@ -1,11 +1,25 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {clampPage, swipeDirection} from '../public/booklet-state.js';
+import {clampPage, swipeDirection, visibleChapters, pageHint} from '../public/booklet-state.js';
 
 test('booklet stays on its cover and final page at navigation boundaries', () => {
   assert.equal(clampPage(-1, 6), 0);
   assert.equal(clampPage(6, 6), 5);
   assert.equal(clampPage(3, 6), 3);
+});
+
+test('mobile chapter shortcuts remain within bounds across nine chapters', () => {
+  assert.deepEqual(visibleChapters(0,9), [0,1,2,3,4]);
+  assert.deepEqual(visibleChapters(4,9), [2,3,4,5,6]);
+  assert.deepEqual(visibleChapters(8,9), [4,5,6,7,8]);
+  assert.deepEqual(visibleChapters(1,3), [0,1,2]);
+});
+
+test('reading cues distinguish scroll, swipe, desktop navigation and final chapter', () => {
+  assert.match(pageHint({scrollable:true,atEnd:false,hasNext:true,nextLabel:'Roses',touch:true}), /Scroll down/);
+  assert.match(pageHint({scrollable:true,atEnd:true,hasNext:true,nextLabel:'Roses',touch:true}), /Swipe left for Roses/);
+  assert.match(pageHint({scrollable:false,atEnd:true,hasNext:true,nextLabel:'Candles',touch:false}), /Next: Candles/);
+  assert.match(pageHint({scrollable:false,atEnd:true,hasNext:false,touch:true}), /last chapter/);
 });
 
 test('page swipes do not capture vertical scrolling or accidental taps', () => {

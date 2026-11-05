@@ -129,3 +129,69 @@ body.book-mode{height:100dvh;min-height:0;display:block;background:#03060e}
 }
 html[data-effects=paused] .book-mode .book-page:after,html[data-effects=paused] .book-mode .eighteen:after{animation:none}
 @media(prefers-reduced-motion:reduce){.book-mode .book-page:after,.book-mode .eighteen:after,.book-mode .portrait-stage,.book-turning .book-viewport:after{animation:none!important}}
+
+/* A distinct chapter for each of the eighteen traditions. */
+.book-mode .tradition-chapter.book-page{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-content:start;align-items:start;gap:40px 7vw}
+.ritual-intro{position:relative;padding:35px 0;max-width:470px}
+.book-mode .ritual-intro h2{font-size:clamp(42px,4.7vw,68px);line-height:1.13;margin:22px 0 28px;letter-spacing:-1.5px}
+.ritual-note{font-size:14px;max-width:360px;line-height:1.9;color:#aabbd3!important}
+.ritual-crest{width:180px;height:70px;object-fit:contain;margin-top:20px;opacity:.75}
+.ritual-intro:after{content:'XVIII';position:absolute;left:-10px;top:260px;font:150px Georgia,serif;letter-spacing:-12px;color:#9eb8df08;z-index:-1;pointer-events:none}
+.book-mode .tradition-chapter .ritual-card{margin-top:20px;padding:32px}
+.book-mode .tradition-chapter .ritual-card ol{columns:2;column-gap:32px;font-size:14px;line-height:1.8}
+.book-mode .tradition-chapter .ritual-heading h3{font-size:23px}
+.book-mode .tradition-chapter .ritual-kicker{letter-spacing:1.7px}
+.chapter-end{grid-column:1/-1;order:3;align-self:center;position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(440px,100%);margin:38px auto 0;padding:30px 20px 20px;border:0;border-top:1px solid #a1b8d336;border-radius:0;background:transparent;color:#bccce3;text-align:center;transition:color .3s;cursor:pointer;flex-shrink:0}
+.chapter-end:before{content:'✧';position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:0 12px;background:#070f1d;color:#9db5d6;font:22px Georgia,serif}
+.chapter-end-kicker{font-size:8px;letter-spacing:2.6px;color:#8ca2c1}
+.chapter-end strong{font:italic 30px Georgia,serif;letter-spacing:-.2px;font-weight:400}
+.chapter-end-instruction{font-size:11px;letter-spacing:.5px;color:#829abc;margin-top:3px}
+.chapter-end.is-ready .chapter-end-instruction{color:#b9d2f5;animation:next-chapter-breathe 3s ease-in-out infinite}
+.chapter-end:hover strong{color:#e0eaff}.chapter-end:hover .chapter-end-instruction{color:#d5e6ff}
+.book-mode .hero .chapter-end{margin-top:24px}
+.book-mode .welcome.book-page{justify-content:flex-start}
+.book-mode .details.book-page,.book-mode .attire.book-page{align-content:start;row-gap:25px}
+.chapter-toolbar{display:flex;align-items:center;justify-content:center;gap:20px;max-width:560px;margin:0 auto 6px}
+.chapter-toolbar .chapter-tabs{margin:0;gap:8px;flex:0 1 auto;min-width:0}
+.contents-button{font-size:10px;letter-spacing:.6px;color:#b1c4df;border:1px solid #819cbd40;background:#0a1626b3;border-radius:25px;padding:8px 16px;min-height:38px;flex-shrink:0}
+.contents-button:before{content:'☰';font-size:11px;margin-right:8px;color:#8fa8cc}
+.contents-button:hover{border-color:#b2c8e7;background:#172b46}
+.book-controls:before{content:'';position:absolute;top:8px;left:0;width:100%;height:1px;background:linear-gradient(90deg,#395c8c,#b6cdec,#395c8c);transform:scaleX(var(--reading-progress,0));transform-origin:left;opacity:.45;pointer-events:none;transition:transform .15s linear}
+.book-controls{--reading-progress:inherit}
+.book-mode #invitation-book.chapter-at-end~.book-controls #page-hint{color:#b7cceb}
+#contents-dialog{width:min(560px,calc(100vw - 30px));max-height:85dvh;overflow:auto;padding:28px;border:1px solid #90a6c966;border-radius:18px;background:linear-gradient(140deg,#101e33,#070e1b);color:#cfdaeb;box-shadow:0 30px 100px #000a}
+#contents-dialog::backdrop{background:#02060edb;backdrop-filter:blur(14px)}
+.contents-heading{display:flex;justify-content:space-between;gap:20px;align-items:center;padding-bottom:22px;border-bottom:1px solid #9aaec72b}
+.contents-heading h2{font:29px/1.2 Georgia,serif;margin:0;letter-spacing:-.5px}
+.contents-close{width:44px;height:44px;flex-shrink:0;border:1px solid #8aa2c340;border-radius:50%;background:transparent;color:#afc2df;font-size:25px}
+.contents-list{display:grid;grid-template-columns:1fr;gap:7px;padding-top:18px}
+.contents-item{display:flex;align-items:center;gap:20px;text-align:left;min-height:50px;padding:12px 16px;border:1px solid transparent;border-radius:7px;background:none;color:#b2c3db;font-size:14px}
+.contents-item>span:first-child{font:italic 20px Georgia,serif;color:#748fb7;min-width:25px}
+.contents-item:hover{background:#172942;border-color:#8ba8cd33}.contents-item[aria-current=page]{background:#1b304c;border-color:#93afd15c;color:#e0eafa}
+@keyframes next-chapter-breathe{0%,100%{opacity:.65;translate:0 0}50%{opacity:1;translate:-3px 0}}
+@media(max-width:1100px){.book-mode .tradition-chapter .ritual-card ol{columns:1}}
+@media(max-width:900px){
+  .book-mode .tradition-chapter.book-page{display:flex;flex-direction:column;gap:25px}
+  .ritual-intro{max-width:none;width:100%;padding:0}
+  .book-mode .ritual-intro h2{font-size:clamp(36px,9vw,48px);margin:18px 0 20px}
+  .ritual-note{font-size:14px;line-height:1.85;max-width:none}
+  .ritual-crest{width:130px;height:45px;margin-top:12px}
+  .ritual-intro:after{font-size:120px;top:40px;left:auto;right:-10px;letter-spacing:-8px}
+  .book-mode .tradition-chapter .ritual-card{width:100%;margin:0;padding:27px 23px}
+  .book-mode .tradition-chapter .ritual-card ol{columns:1;line-height:1.85;font-size:14px;padding-left:24px}
+  .book-mode .tradition-chapter .ritual-heading{gap:20px;margin-bottom:19px}
+  .book-mode .tradition-chapter .ritual-heading h3{font-size:22px}
+  .chapter-end{margin-top:26px;padding:29px 14px 14px;gap:10px}
+  .chapter-end strong{font-size:28px}.chapter-end-instruction{font-size:11px}
+  .chapter-toolbar{gap:10px;margin-bottom:7px;justify-content:center}
+  .contents-button{padding:8px 12px;font-size:9px;min-height:36px}
+  .contents-button:before{margin-right:6px;font-size:10px}
+  .chapter-toolbar .chapter-tabs{gap:2px}
+  .chapter-toolbar .chapter-tab{min-width:31px;padding:7px 6px;letter-spacing:1px}
+  #contents-dialog{padding:23px 20px}
+  .contents-heading h2{font-size:26px}.contents-item{padding:11px 13px;min-height:48px}
+  .book-position>span{font-size:8px;display:block;max-width:170px;line-height:1.4}
+}
+@media(max-width:370px){.chapter-toolbar{gap:7px}.contents-button{padding:8px 10px}.chapter-toolbar .chapter-tab{min-width:28px;padding:7px 4px}.book-mode .tradition-chapter .ritual-card{padding:25px 19px}.book-position>span{max-width:130px;font-size:7px}}
+html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animation:none}
+@media(prefers-reduced-motion:reduce){.chapter-end.is-ready .chapter-end-instruction{animation:none}}
