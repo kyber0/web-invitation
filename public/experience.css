@@ -245,3 +245,23 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
   .book-mode .welcome .chapter-body{padding:10px 0}
 }
 @media(max-width:350px){.book-navigation{grid-template-columns:64px minmax(0,1fr) 64px;gap:6px}.book-arrow{font-size:9px;padding:10px 5px}.book-position>span{font-size:7px}.chapter-toolbar{gap:6px}.contents-button{padding:8px 9px}.contents-button:before{margin-right:5px}.chapter-toolbar .chapter-tab{min-width:26px}}
+
+.ritual-siblings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:360px;margin:24px 0 8px}
+.ritual-siblings a{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:9px 12px;border:1px solid #7d95b23d;border-radius:5px;background:#0a1525b0;font-size:11px;line-height:1.5;color:#a7bddb;text-align:center;white-space:normal;overflow-wrap:anywhere;transition:background .2s,border-color .2s}
+.ritual-siblings a[aria-current=page]{color:#e0e9f6;background:#203858;border-color:#a1b8d380}
+.ritual-siblings a:hover{background:#1b304c;border-color:#a1b8d3}
+.ritual-card ol,.ritual-card li{visibility:visible;opacity:1}
+.ritual-number{background:none!important;background-clip:border-box!important;-webkit-text-fill-color:initial!important;color:#b4c9e6!important;text-shadow:1px 1px #213955}
+.contents-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+#contents-dialog .motion-toggle{position:static;inset:auto;min-height:44px;min-width:65px;padding:8px;color:#a7bddb;visibility:visible;border:1px solid #8aa2c340;border-radius:6px;font-size:9px}
+.book-mode header nav a[href="#traditions"]{display:inline-flex;align-items:center;min-height:44px}
+@media(max-width:900px){
+  .book-mode header nav{gap:16px}
+  .book-mode header nav a[href="#traditions"],.book-mode header nav .nav-rsvp{font-size:11px;white-space:nowrap}
+  .ritual-siblings{max-width:none;width:100%;margin-top:20px}
+  .ritual-siblings a{font-size:12px}
+  .contents-heading{gap:10px;align-items:flex-start}
+  .contents-heading h2{font-size:23px}
+  .contents-actions{flex-direction:column;gap:6px}
+  .contents-close{order:-1}
+}

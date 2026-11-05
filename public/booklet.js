@@ -1,26 +1,6 @@
 import { clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress } from './booklet-state.js';
 
 const book = document.querySelector('#invitation-book');
-const traditionSection = document.querySelector('#traditions');
-const traditionCards = [...traditionSection.querySelectorAll('.ritual-card')];
-const traditionLabels = ['Roses', 'Candles', 'Bluebills', 'Wines & shots'];
-for (const [index, card] of traditionCards.entries()) {
-  const section = document.createElement('section');
-  section.id = index === 0 ? 'traditions' : ['','candles','bluebills','wines-shots'][index];
-  section.className = 'section tradition-chapter';
-  section.dataset.chapterLabel = traditionLabels[index];
-  const intro = document.createElement('div'); intro.className = 'ritual-intro';
-  const eyebrow = document.createElement('p'); eyebrow.className = 'eyebrow';
-  eyebrow.textContent = `THE EIGHTEEN / ${String(index + 1).padStart(2,'0')} OF 04`;
-  const heading = document.createElement('h2'); heading.textContent = card.querySelector('h3').textContent;
-  const note = document.createElement('p'); note.className = 'ritual-note';
-  note.textContent = ['Eighteen gestures of love, shared with the people closest to my heart.', 'Eighteen lights, wishes, and treasures for the chapter ahead.', 'Eighteen blessings, offered with love and beautiful intentions.', 'Eighteen toasts to friendship, joy, and a world of possibilities.'][index];
-  const crest = document.createElement('img'); crest.src='/crystal.svg';crest.alt='';crest.className='ritual-crest';
-  intro.append(eyebrow,heading,note,crest);
-  card.querySelector('h3').textContent='Our honored participants';
-  section.append(intro,card); traditionSection.before(section);
-}
-traditionSection.remove();
 const pages = [...book.querySelectorAll(':scope > section')];
 const defaultLabels = {home:'The cover', dedication:'For you', details:'The evening', attire:'The attire', rsvp:'Your reply'};
 const labels = pages.map(page=>page.dataset.chapterLabel || defaultLabels[page.id]);
@@ -49,7 +29,9 @@ const menu = document.createElement('dialog');menu.id='contents-dialog';menu.set
 const menuHeader=document.createElement('div');menuHeader.className='contents-heading';
 const menuTitle=document.createElement('h2');menuTitle.id='contents-title';menuTitle.textContent='Inside the invitation';
 const closeMenu=document.createElement('button');closeMenu.className='contents-close';closeMenu.textContent='×';closeMenu.setAttribute('aria-label','Close chapters');
-menuHeader.append(menuTitle,closeMenu);const menuList=document.createElement('div');menuList.className='contents-list';
+const menuActions=document.createElement('div');menuActions.className='contents-actions';
+menuActions.append(document.querySelector('#motion-toggle'),closeMenu);
+menuHeader.append(menuTitle,menuActions);const menuList=document.createElement('div');menuList.className='contents-list';
 menu.append(menuHeader,menuList);document.body.append(menu);
 menuButton.onclick=()=>menu.showModal();closeMenu.onclick=()=>menu.close();
 menu.addEventListener('click',event=>{if(event.target===menu)menu.close()});

@@ -1,5 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress} from '../public/booklet-state.js';
 
 test('booklet stays on its cover and final page at navigation boundaries', () => {
@@ -40,4 +41,14 @@ test('a turning sheet follows the drag and stops at a complete half-turn', () =>
   assert.equal(dragProgress(156,390,false),.5);
   assert.equal(dragProgress(100,390,true),0);
   assert.equal(dragProgress(-900,390,true),1);
+});
+
+test('all four tradition chapters contain 18 names without JavaScript rendering', () => {
+  const html=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+  for(const id of ['traditions','candles','bluebills','wines-shots']) {
+    const section=html.match(new RegExp(`<section id="${id}"[^>]*>([\\s\\S]*?)</section>`));
+    assert.ok(section,`${id} chapter exists in the delivered HTML`);
+    assert.equal((section[1].match(/<li>/g)||[]).length,18);
+    assert.doesNotMatch(section[1],/<details|<summary/);
+  }
 });

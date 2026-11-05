@@ -55,3 +55,5 @@ The booklet now occupies the full viewport with navigation overlaid at the edges
 A Chapters menu provides direct access to all nine chapters. Mobile shortcuts show five nearby chapters to avoid overflow. Each non-final chapter ends with a next-chapter panel; the navigation hint changes from scrolling guidance to a swipe-left cue at the bottom. A reading-progress line tracks the current chapter.
 
 Page turns now use a single two-sided sheet that pivots on the spine and follows horizontal dragging, with a cast shadow and cancellation for short gestures. Chapter content and bottom continuation prompts have separate layout containers. Desktop grids no longer include the full-width prompt as an implicit content row, and the mobile control bar uses bounded grid columns with wrapping labels.
+
+The four tradition chapters and all 72 participant names are included directly in `public/index.html`; they no longer depend on another module generating cards before booklet initialization. The mobile header exposes The 18s, and each tradition chapter includes named shortcuts to the other three groups.
