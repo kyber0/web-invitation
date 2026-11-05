@@ -22,7 +22,7 @@ function resize() {
 }
 
 function glint(x, y, size, alpha) {
-  ctx.globalAlpha = alpha; ctx.fillStyle = '#e3efff';
+  ctx.globalAlpha = alpha * .58; ctx.fillStyle = '#cfddf0';
   ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
   if (size > 1.3) {
     ctx.strokeStyle = '#bdd6ff'; ctx.lineWidth = .55;
@@ -62,7 +62,7 @@ function draw(time) {
     if (elapsed > nextShooting) { shooting.push({ x: width * (.3 + Math.random() * .7), y: Math.random() * height * .4, life: 1 }); nextShooting = elapsed + 7 + Math.random() * 9; }
     for (const star of shooting) {
       star.x -= dt * 300; star.y += dt * 150; star.life -= dt * .75;
-      ctx.globalAlpha = Math.max(0, star.life) * .65;
+      ctx.globalAlpha = Math.max(0, star.life) * .38;
       const gradient = ctx.createLinearGradient(star.x, star.y, star.x + 100, star.y - 50);
       gradient.addColorStop(0, '#e1eeff'); gradient.addColorStop(1, '#729ee100');
       ctx.strokeStyle = gradient; ctx.lineWidth = 1;
@@ -109,6 +109,22 @@ portrait.addEventListener('pointerleave', () => { portrait.style.setProperty('--
 const progress = document.querySelector('.scroll-progress');
 function scrollProgress() { const available = document.documentElement.scrollHeight - innerHeight; progress.style.transform = `scaleX(${available > 0 ? scrollY / available : 0})`; }
 addEventListener('scroll', scrollProgress, { passive: true }); scrollProgress();
+// Keep the shortcut out of the way while the guest is already completing RSVP.
+const floatingRsvp = document.querySelector('.floating-rsvp');
+new IntersectionObserver(entries => {
+  floatingRsvp.hidden = entries[0].isIntersecting;
+}, { threshold: 0 }).observe(document.querySelector('#rsvp'));
+const sectionLinks = [...document.querySelectorAll('header nav a')];
+const sectionObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (!entry.isIntersecting) continue;
+    for (const link of sectionLinks) {
+      if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    }
+  }
+}, { rootMargin: '-15% 0px -60% 0px' });
+for (const section of document.querySelectorAll('#details, #traditions, #rsvp')) sectionObserver.observe(section);
 document.querySelector('#light-sky').onclick = () => {
   document.querySelector('#sky-message').textContent = paused ? 'A beautiful new chapter, written in the stars.' : 'Here’s to a night that shines as brightly as you.';
   for (let i = 0; i < 5; i++) burst(width * (.15 + Math.random() * .7), height * (.15 + Math.random() * .65), 25);
