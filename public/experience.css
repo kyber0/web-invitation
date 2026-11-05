@@ -195,3 +195,53 @@ html[data-effects=paused] .book-mode .book-page:after,html[data-effects=paused] 
 @media(max-width:370px){.chapter-toolbar{gap:7px}.contents-button{padding:8px 10px}.chapter-toolbar .chapter-tab{min-width:28px;padding:7px 4px}.book-mode .tradition-chapter .ritual-card{padding:25px 19px}.book-position>span{max-width:130px;font-size:7px}}
 html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animation:none}
 @media(prefers-reduced-motion:reduce){.chapter-end.is-ready .chapter-end-instruction{animation:none}}
+
+/* Keep chapter layout separate from the full-width continuation prompt. */
+.book-mode .book-page{display:block!important}
+.book-mode .book-page>.chapter-body{width:100%;min-width:0;max-width:1260px!important;margin:0 auto}
+.book-mode .hero .chapter-body,.book-mode .details .chapter-body,.book-mode .attire .chapter-body,.book-mode .rsvp .chapter-body,.book-mode .tradition-chapter .chapter-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(35px,6vw,100px);align-items:center}
+.book-mode .tradition-chapter .chapter-body,.book-mode .rsvp .chapter-body{align-items:start}
+.book-mode .welcome .chapter-body{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:760px!important;padding:30px 0}
+.book-mode .ritual-intro{padding-top:15px}
+.book-mode .chapter-end{display:flex;min-width:0;width:100%;max-width:440px;box-sizing:border-box;margin:55px auto 0;align-self:auto}
+.chapter-end>*{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.book-navigation{display:grid;grid-template-columns:125px minmax(0,1fr) 125px;width:100%;gap:16px}
+.book-position{min-width:0;width:100%;max-width:100%}
+.book-position p,.book-position>span{max-width:100%;min-width:0;margin-left:auto;margin-right:auto;white-space:normal;overflow-wrap:anywhere;word-break:normal;text-align:center}
+.book-controls,.chapter-toolbar,.chapter-tabs{min-width:0;max-width:100%;box-sizing:border-box}
+.book-arrow{min-width:0;width:100%;max-width:100%;white-space:normal;overflow-wrap:break-word}
+.book-arrow>span{min-width:0}
+.book-mode .book-viewport{perspective:1800px;perspective-origin:left center;isolation:isolate}
+.book-turn-sheet{position:absolute;inset:0;z-index:12;transform-origin:left center;transform-style:preserve-3d;pointer-events:none;will-change:transform}
+.sheet-front,.sheet-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#080f1d;border-right:1px solid #9eb4d466}
+.sheet-front{transform:translateZ(.5px);box-shadow:10px 0 35px #0008}
+.sheet-front:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#02050c99,transparent 12%,transparent 65%,#9cb9e71f 95%,#d3e3fc35);z-index:10}
+.sheet-back{transform:rotateY(180deg) translateZ(.5px);display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1c3151aa,transparent 65%),#070d19;box-shadow:-8px 0 30px #0007;border-left:1px solid #a1b6d459}
+.sheet-back:before{content:'';position:absolute;inset:30px;border:1px solid #9fb4d12b;background:url('/constellation.svg') center/contain no-repeat;opacity:.4}
+.sheet-back>span{font:italic clamp(70px,12vw,160px) Georgia,serif;color:#a6bad780;letter-spacing:-5px}
+.sheet-back>small{font-size:8px;letter-spacing:3px;color:#8299bb;text-align:center;padding:0 25px}
+.book-mode .sheet-front .book-page{background-color:#080f1d;pointer-events:none;scroll-behavior:auto}
+.book-mode .sheet-front .book-page *{animation:none!important;transition:none!important}
+.turn-cast-shadow{position:absolute;inset:0;z-index:11;pointer-events:none;opacity:0;background:linear-gradient(90deg,#000c,transparent 55%)}
+.book-turning .book-viewport:after{display:none}
+.book-turning{user-select:none;-webkit-user-select:none}
+@media(max-width:900px){
+  .book-mode .hero .chapter-body{display:flex;flex-direction:column;gap:35px;align-items:center}
+  .book-mode .details .chapter-body,.book-mode .attire .chapter-body,.book-mode .rsvp .chapter-body,.book-mode .tradition-chapter .chapter-body{display:flex;flex-direction:column;align-items:stretch;gap:35px}
+  .book-mode .attire .chapter-body{gap:8px}
+  .book-mode .book-page>.chapter-body{max-width:560px!important}
+  .book-mode .chapter-end{margin:38px auto 0;padding-left:12px;padding-right:12px;max-width:100%}
+  .chapter-end strong{font-size:27px;line-height:1.3}
+  .chapter-end-instruction{line-height:1.65;font-size:11px;letter-spacing:.2px}
+  .book-navigation{grid-template-columns:76px minmax(0,1fr) 76px;gap:8px;align-items:center}
+  .book-position p{font-size:10px;line-height:1.5;letter-spacing:.1px}
+  .book-position>span{display:block;font-size:8px;line-height:1.6;letter-spacing:0;max-width:100%}
+  .book-arrow{padding:10px 8px;gap:5px;font-size:10px;min-height:44px}
+  .book-controls{left:0;right:0;width:100%;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));overflow-wrap:anywhere}
+  .chapter-toolbar{gap:8px;width:100%;max-width:350px;justify-content:center}
+  .chapter-toolbar .chapter-tabs{flex:0 1 auto;gap:2px}
+  .chapter-toolbar .chapter-tab{min-width:28px;padding:7px 4px;font-size:9px}
+  .contents-button{padding:8px 11px;font-size:9px}
+  .book-mode .welcome .chapter-body{padding:10px 0}
+}
+@media(max-width:350px){.book-navigation{grid-template-columns:64px minmax(0,1fr) 64px;gap:6px}.book-arrow{font-size:9px;padding:10px 5px}.book-position>span{font-size:7px}.chapter-toolbar{gap:6px}.contents-button{padding:8px 9px}.contents-button:before{margin-right:5px}.chapter-toolbar .chapter-tab{min-width:26px}}

@@ -53,3 +53,5 @@ The guest invitation is a nine-chapter booklet with a 3D page-turn transition, p
 The booklet now occupies the full viewport with navigation overlaid at the edges. Chapters scroll internally when needed. Each debut tradition has its own chapter with an open, numbered honor roll; no accordion click is required.
 
 A Chapters menu provides direct access to all nine chapters. Mobile shortcuts show five nearby chapters to avoid overflow. Each non-final chapter ends with a next-chapter panel; the navigation hint changes from scrolling guidance to a swipe-left cue at the bottom. A reading-progress line tracks the current chapter.
+
+Page turns now use a single two-sided sheet that pivots on the spine and follows horizontal dragging, with a cast shadow and cancellation for short gestures. Chapter content and bottom continuation prompts have separate layout containers. Desktop grids no longer include the full-width prompt as an implicit content row, and the mobile control bar uses bounded grid columns with wrapping labels.

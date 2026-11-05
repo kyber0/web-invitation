@@ -7,6 +7,15 @@ export function swipeDirection(dx, dy) {
   return dx < 0 ? 1 : -1;
 }
 
+export function pageRotation(progress, forward) {
+  const amount = Math.max(0, Math.min(1, progress));
+  return amount === 0 ? 0 : (forward ? -180 : 180) * amount;
+}
+
+export function dragProgress(dx, width, forward) {
+  return Math.max(0, Math.min(1, (forward ? -dx : dx) / Math.max(240, width * .8)));
+}
+
 export function visibleChapters(current, count, maximum = 5) {
   const length = Math.min(maximum, count);
   const start = Math.max(0, Math.min(current - Math.floor(length / 2), count - length));

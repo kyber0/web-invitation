@@ -1,4 +1,4 @@
-import { clampPage, swipeDirection, visibleChapters, pageHint } from './booklet-state.js';
+import { clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress } from './booklet-state.js';
 
 const book = document.querySelector('#invitation-book');
 const traditionSection = document.querySelector('#traditions');
@@ -59,7 +59,9 @@ pages.forEach((page, index) => {
   page.classList.remove('reveal');
   page.setAttribute('aria-label', `Page ${index + 1}: ${labels[index]}`);
   page.querySelector('h1, h2')?.setAttribute('tabindex', '-1');
-  viewport.append(page);
+  const body=document.createElement('div');body.className='chapter-body';
+  while(page.firstChild)body.append(page.firstChild);
+  page.append(body);viewport.append(page);
   if(index < pages.length-1) {
     const end=document.createElement('button');end.className='chapter-end';
     const line=document.createElement('span');line.className='chapter-end-kicker';line.textContent='THE NEXT CHAPTER';
@@ -118,39 +120,83 @@ function updateReading() {
 
 }
 
-async function turn(target, { focus = true, animate = true } = {}) {
-  const index = clampPage(target, pages.length);
-  if (index === current || busy) return;
-  busy = true; update();
+function motionEnabled() {
+  return !reduced.matches && document.documentElement.dataset.effects !== 'paused';
+}
+
+function sheetTransform(progress, forward) {
+  return `rotateY(${pageRotation(progress,forward)}deg)`;
+}
+
+function prepareTurn(index) {
+  const old=pages[current],incoming=pages[index],forward=index>current;
+  incoming.hidden=false;incoming.inert=true;old.inert=true;
+  const sheet=document.createElement('div');sheet.className='book-turn-sheet';sheet.inert=true;sheet.setAttribute('aria-hidden','true');
+  const front=document.createElement('div');front.className='sheet-front';
+  sheet.style.transformOrigin=forward?'left center':'right center';
+  const snapshot=old.cloneNode(true);
+  snapshot.removeAttribute('id');snapshot.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+  snapshot.classList.remove('book-current','book-arriving');snapshot.hidden=false;snapshot.inert=true;
+  front.append(snapshot);
+  const back=document.createElement('div');back.className='sheet-back';
+  const monogram=document.createElement('span');monogram.textContent='CK';
+  const mark=document.createElement('small');mark.textContent='A CHAPTER WRITTEN IN THE STARS';
+  back.append(monogram,mark);sheet.append(front,back);
+  const shadow=document.createElement('div');shadow.className='turn-cast-shadow';shadow.setAttribute('aria-hidden','true');
+  if(!forward)shadow.style.background='linear-gradient(270deg,#000c,transparent 55%)';
+  viewport.append(shadow,sheet);snapshot.scrollTop=old.scrollTop;
+  old.style.visibility='hidden';
+  sheet.style.transform=sheetTransform(0,forward);
   book.classList.add('book-turning');
-  const old = pages[current], incoming = pages[index];
-  const forward = index > current;
-  incoming.hidden = false; incoming.inert = true;
-  incoming.classList.add('book-arriving');
-  old.inert = true;
-  if (animate && !reduced.matches && document.documentElement.dataset.effects !== 'paused') {
-    const duration = 750;
-    old.style.transformOrigin = forward ? 'left center' : 'right center';
-    incoming.style.transformOrigin = forward ? 'right center' : 'left center';
-    const leaving = old.animate([
-      { transform: 'rotateY(0deg)', opacity: 1, filter: 'brightness(1)' },
-      { transform: `rotateY(${forward ? -78 : 78}deg)`, opacity: 0, filter: 'brightness(.45)' },
-    ], { duration, easing: 'cubic-bezier(.45,0,.2,1)' });
-    const arriving = incoming.animate([
-      { transform: `rotateY(${forward ? 35 : -35}deg) translateX(${forward ? 6 : -6}%)`, opacity: 0, filter: 'brightness(.5)' },
-      { transform: 'rotateY(0deg) translateX(0)', opacity: 1, filter: 'brightness(1)' },
-    ], { duration, easing: 'cubic-bezier(.2,.7,.2,1)' });
-    await Promise.allSettled([leaving.finished, arriving.finished]);
+  return {index,old,incoming,forward,sheet,shadow,progress:0};
+}
+
+function previewTurn(state,progress) {
+  state.progress=Math.max(0,Math.min(1,progress));
+  state.sheet.style.transform=sheetTransform(state.progress,state.forward);
+  state.shadow.style.opacity=String(Math.sin(state.progress*Math.PI)*.65);
+}
+
+async function finishTurn(state,commit,{focus=true}={}) {
+  const end=commit?1:0;
+  if(motionEnabled()) {
+    const duration=Math.max(220,760*Math.abs(end-state.progress));
+    const animation=state.sheet.animate([
+      {transform:sheetTransform(state.progress,state.forward)},
+      {transform:sheetTransform(end,state.forward)},
+    ],{duration,easing:'cubic-bezier(.25,.65,.25,1)',fill:'forwards'});
+    const shade=state.shadow.animate([
+      {opacity:Number(state.shadow.style.opacity||0)},
+      {opacity:.55,offset:.4},
+      {opacity:0},
+    ],{duration,fill:'forwards'});
+    await Promise.allSettled([animation.finished,shade.finished]);
   }
-  old.hidden = true; old.classList.remove('book-current');
-  incoming.classList.remove('book-arriving'); incoming.classList.add('book-current');
-  incoming.inert = false; incoming.scrollTop = 0;
-  current = index; busy = false;
-  book.classList.remove('book-turning');
-  history.replaceState(null, '', `${location.pathname}${location.search}#${incoming.id}`);
-  update();
-  if (focus) incoming.querySelector('h1, h2')?.focus({ preventScroll: true });
-  document.dispatchEvent(new CustomEvent('book:page', { detail: { index, id: incoming.id } }));
+  state.sheet.remove();state.shadow.remove();
+  state.old.style.removeProperty('visibility');state.incoming.style.removeProperty('visibility');
+  if(commit) {
+    state.old.hidden=true;state.old.classList.remove('book-current');
+    state.incoming.classList.add('book-current');state.incoming.inert=false;state.incoming.scrollTop=0;
+    current=state.index;
+    history.replaceState(null,'',`${location.pathname}${location.search}#${state.incoming.id}`);
+  } else {
+    state.incoming.hidden=true;state.old.inert=false;
+  }
+  busy=false;book.classList.remove('book-turning');update();
+  if(commit&&focus)state.incoming.querySelector('h1,h2')?.focus({preventScroll:true});
+  if(commit)document.dispatchEvent(new CustomEvent('book:page',{detail:{index:current,id:pages[current].id}}));
+}
+
+async function turn(target,{focus=true,animate=true}={}) {
+  const index=clampPage(target,pages.length);
+  if(index===current||busy)return;
+  busy=true;update();
+  if(animate&&motionEnabled())return finishTurn(prepareTurn(index),true,{focus});
+  pages[current].hidden=true;pages[current].inert=true;pages[current].classList.remove('book-current');
+  current=index;pages[current].hidden=false;pages[current].inert=false;pages[current].scrollTop=0;pages[current].classList.add('book-current');
+  busy=false;history.replaceState(null,'',`${location.pathname}${location.search}#${pages[current].id}`);update();
+  if(focus)pages[current].querySelector('h1,h2')?.focus({preventScroll:true});
+  document.dispatchEvent(new CustomEvent('book:page',{detail:{index:current,id:pages[current].id}}));
 }
 
 const deepLink = pages.findIndex(page => `#${page.id}` === location.hash);
@@ -176,17 +222,36 @@ document.addEventListener('keydown', event => {
   if (event.key === 'ArrowRight') { event.preventDefault(); turn(current + 1); }
   if (event.key === 'ArrowLeft') { event.preventDefault(); turn(current - 1); }
 });
-viewport.addEventListener('pointerdown', event => {
-  if (event.button !== 0 || busy || event.target.closest('input, select, textarea, button, a, summary, label')) return;
-  gesture = { x: event.clientX, y: event.clientY, id: event.pointerId };
+viewport.addEventListener('pointerdown',event=>{
+  if(!event.isPrimary||event.button!==0||busy||event.target.closest('input,select,textarea,button,a,summary,label'))return;
+  gesture={x:event.clientX,y:event.clientY,id:event.pointerId,state:null};
 });
-viewport.addEventListener('pointerup', event => {
-  if (!gesture || event.pointerId !== gesture.id) return;
-  const direction = swipeDirection(event.clientX - gesture.x, event.clientY - gesture.y);
-  gesture = null;
-  if (!window.getSelection()?.toString() && direction) turn(current + direction);
+viewport.addEventListener('pointermove',event=>{
+  if(!gesture||gesture.id!==event.pointerId)return;
+  const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
+  if(!gesture.state) {
+    if(Math.abs(dy)>18&&Math.abs(dy)>Math.abs(dx)){gesture=null;return;}
+    if(Math.abs(dx)<18||Math.abs(dx)<Math.abs(dy)*1.5||!motionEnabled())return;
+    const index=clampPage(current+(dx<0?1:-1),pages.length);
+    if(index===current)return;
+    busy=true;update();gesture.state=prepareTurn(index);viewport.setPointerCapture(event.pointerId);
+  }
+  const state=gesture.state;
+  previewTurn(state,dragProgress(dx,viewport.clientWidth,state.forward));
 });
-viewport.addEventListener('pointercancel', () => { gesture = null; });
+viewport.addEventListener('pointerup',event=>{
+  if(!gesture||gesture.id!==event.pointerId)return;
+  const active=gesture;gesture=null;
+  if(viewport.hasPointerCapture(event.pointerId))viewport.releasePointerCapture(event.pointerId);
+  const direction=swipeDirection(event.clientX-active.x,event.clientY-active.y);
+  if(active.state) {
+    const commit=direction===(active.state.forward?1:-1)||active.state.progress>.35;
+    finishTurn(active.state,commit,{focus:false});
+  } else if(!window.getSelection()?.toString()&&direction)turn(current+direction,{focus:false});
+});
+viewport.addEventListener('pointercancel',()=>{
+  const state=gesture?.state;gesture=null;if(state)finishTurn(state,false,{focus:false});
+});
 addEventListener('hashchange', () => {
   const index = pages.findIndex(page => `#${page.id}` === location.hash);
   if (index >= 0) turn(index);

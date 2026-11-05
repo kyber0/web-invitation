@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {clampPage, swipeDirection, visibleChapters, pageHint} from '../public/booklet-state.js';
+import {clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress} from '../public/booklet-state.js';
 
 test('booklet stays on its cover and final page at navigation boundaries', () => {
   assert.equal(clampPage(-1, 6), 0);
@@ -28,4 +28,16 @@ test('page swipes do not capture vertical scrolling or accidental taps', () => {
   assert.equal(swipeDirection(70, 60), 0);
   assert.equal(swipeDirection(-90, 15), 1);
   assert.equal(swipeDirection(90, -15), -1);
+});
+
+test('a turning sheet follows the drag and stops at a complete half-turn', () => {
+  assert.equal(pageRotation(0,true),0);
+  assert.equal(pageRotation(.5,true),-90);
+  assert.equal(pageRotation(1,true),-180);
+  assert.equal(pageRotation(.5,false),90);
+  assert.equal(pageRotation(2,false),180);
+  assert.equal(dragProgress(-156,390,true),.5);
+  assert.equal(dragProgress(156,390,false),.5);
+  assert.equal(dragProgress(100,390,true),0);
+  assert.equal(dragProgress(-900,390,true),1);
 });
