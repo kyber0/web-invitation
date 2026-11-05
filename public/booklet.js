@@ -60,13 +60,14 @@ async function turn(target, { focus = true, animate = true } = {}) {
   const index = clampPage(target, pages.length);
   if (index === current || busy) return;
   busy = true; update();
+  book.classList.add('book-turning');
   const old = pages[current], incoming = pages[index];
   const forward = index > current;
   incoming.hidden = false; incoming.inert = true;
   incoming.classList.add('book-arriving');
   old.inert = true;
   if (animate && !reduced.matches && document.documentElement.dataset.effects !== 'paused') {
-    const duration = 650;
+    const duration = 750;
     old.style.transformOrigin = forward ? 'left center' : 'right center';
     incoming.style.transformOrigin = forward ? 'right center' : 'left center';
     const leaving = old.animate([
@@ -83,6 +84,7 @@ async function turn(target, { focus = true, animate = true } = {}) {
   incoming.classList.remove('book-arriving'); incoming.classList.add('book-current');
   incoming.inert = false; incoming.scrollTop = 0;
   current = index; busy = false;
+  book.classList.remove('book-turning');
   history.replaceState(null, '', `${location.pathname}${location.search}#${incoming.id}`);
   update();
   if (focus) incoming.querySelector('h1, h2')?.focus({ preventScroll: true });

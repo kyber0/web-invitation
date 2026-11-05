@@ -1,0 +1,131 @@
+/* Full-viewport chapter experience, with navigation overlaid at the edges. */
+body.book-mode{height:100dvh;min-height:0;display:block;background:#03060e}
+.book-mode #invitation-book{position:fixed;inset:0;width:100%;height:100%;margin:0;min-height:0;border:0;border-radius:0;box-shadow:none;background:transparent;perspective:2000px}
+.book-mode #invitation-book:before{width:18px;border-radius:0;background:linear-gradient(90deg,#02050ba6,#29385135,transparent)}
+.book-mode #invitation-book:after{inset:74px 26px 128px;border-color:#839abd20;border-radius:0}
+.book-mode header{position:fixed;inset:0 0 auto;height:66px;min-height:66px;z-index:8;padding:0 35px;background:linear-gradient(#030711f5,#030711ad);border:0;backdrop-filter:blur(10px)}
+.book-mode header:after{content:'';position:absolute;bottom:0;left:35px;right:35px;height:1px;background:linear-gradient(90deg,transparent,#a2b6d53d,transparent)}
+.book-mode .motion-toggle{position:fixed;z-index:9;top:12px;right:285px;left:auto;bottom:auto;color:#9cacc5;background:none;font-size:10px;min-height:42px;border:0}
+.book-mode .book-viewport{border-radius:0}
+.book-mode .book-page{padding:110px max(6vw,40px) 155px!important;background:radial-gradient(ellipse at 80% 25%,#1732613d,transparent 50%),linear-gradient(90deg,#030812a1,#060b15d1 45%,#03081291);scroll-padding-block:110px 155px;isolation:isolate}
+.book-mode .book-page:before{position:fixed;top:85px;left:50%;right:auto;width:70px;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#bdd0ed75,transparent)}
+.book-mode .book-page:after{content:'';position:absolute;right:-100px;top:40px;width:min(650px,70vw);aspect-ratio:1;background:url('/constellation.svg') center/contain no-repeat;opacity:.22;pointer-events:none;z-index:-1;animation:celestial-wheel 120s linear infinite}
+.book-controls{position:fixed;inset:auto 0 0;z-index:8;width:100%;margin:0;padding:20px max(5vw,30px) calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#030813ec 25%,#030711fa 85%);pointer-events:none}
+.book-controls>*{pointer-events:auto;max-width:1200px;margin-left:auto;margin-right:auto}
+.book-navigation{padding-top:5px}
+.chapter-tabs{gap:16px;margin-bottom:9px}
+.chapter-tab{min-width:44px;min-height:36px;color:#8e9cb5;letter-spacing:1.8px}
+.chapter-tab[aria-current=page]{color:#dce7f7;text-shadow:0 0 16px #92b9ed70}
+.chapter-tab:after{height:1px;left:4px;right:4px;background:linear-gradient(90deg,transparent,#c6ddff,transparent)}
+.book-arrow{background:#0c1b30b0;border-color:#738cae50;border-radius:30px;padding:12px 24px;min-height:46px;min-width:125px;backdrop-filter:blur(8px)}
+.book-arrow:hover:enabled{background:#1c3557;border-color:#a8c4e7;box-shadow:0 0 25px #3d6ba52b}
+.book-position p{font-family:Georgia,serif;font-size:14px;letter-spacing:1px;color:#c7d4e8}
+.book-position>span{font-size:10px;color:#8d9db9;letter-spacing:.5px}
+.book-ribbon{position:fixed;right:38px;top:66px;padding:14px 10px 26px;font-size:8px;z-index:6;letter-spacing:2px;background:linear-gradient(90deg,#0c1d36,#2b4974 45%,#13294a);box-shadow:0 5px 15px #0005}
+.book-mode .hero.book-page{gap:8vw;padding-left:max(9vw,40px)!important;padding-right:max(9vw,40px)!important}
+.book-mode .hero .hero-copy{position:relative}
+.book-mode .hero h1{font-size:clamp(80px,8.8vw,138px);letter-spacing:-5px;margin-bottom:28px}
+.book-mode .hero .portrait-stage{max-width:410px;width:100%;padding:13px;animation:portrait-arrival 1.3s ease both}
+.book-mode .hero .portrait{height:clamp(380px,56vh,620px);border-radius:120px 120px 16px 16px}
+.book-mode .hero .portrait-stage:before,.book-mode .hero .portrait-stage:after{border-radius:132px 132px 20px 20px}
+.book-mode .hero .frame-crown{width:200px;top:-36px}
+.book-mode .hero .portrait-ribbon{width:170px;left:-55px;bottom:-50px}
+.book-mode .hero .eighteen{font-size:66px;position:relative}
+.book-mode .hero .eighteen:after{content:'';position:absolute;inset:0 -12px;background:linear-gradient(110deg,transparent 30%,#dcecff38 48%,transparent 65%);transform:translateX(-120%);animation:foil-shimmer 8s ease-in-out infinite;pointer-events:none}
+.book-mode .hero .hero-actions{margin-top:25px;gap:24px}
+.book-mode .hero .hero-actions .button{padding:13px 26px;font-size:13px;border-radius:30px;background:#183252b3;backdrop-filter:blur(10px)}
+.book-mode .hero .surname{letter-spacing:4px}
+.book-mode .welcome.book-page{background:radial-gradient(ellipse at center,#1224455e,transparent 60%),#0409169c}
+.book-mode .welcome.book-page:after{top:50%;left:50%;right:auto;transform:translate(-50%,-50%);width:min(700px,90vw);opacity:.35;animation:none}
+.book-mode .welcome h2{font-size:clamp(42px,5.3vw,76px);line-height:1.15}
+.book-mode .book-page h2{font-size:clamp(40px,4.8vw,68px);letter-spacing:-1.6px}
+.book-mode .book-page .eyebrow{font-size:10px;letter-spacing:2.8px;color:#93a9cb}
+.book-mode .details.book-page,.book-mode .attire.book-page{align-content:center;gap:9vw}
+.book-mode .book-page .invitation-card{background:linear-gradient(145deg,#14223bd9,#070e1ce8);border-color:#8ba4c350!important;border-radius:18px;padding:45px 35px 35px;box-shadow:inset 0 0 0 7px #080f1c66,inset 0 0 0 8px #96acce1c,0 20px 60px #0004;backdrop-filter:blur(10px)}
+.book-mode .book-page .countdown div{border-radius:9px;background:#101c30a6}
+.book-mode .attire .swatches span:before{transition:transform .35s,box-shadow .35s}
+.book-mode .attire .swatches span:hover:before{box-shadow:0 0 0 5px #081025,0 0 0 6px #a4bbdf,0 0 30px #789fce44}
+.book-mode .traditions.book-page{padding-top:115px!important;padding-bottom:165px!important}
+.book-mode .traditions h2{font-size:clamp(38px,4.5vw,64px)}
+.book-mode .traditions #tradition-lists{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:45px;align-items:stretch}
+.ritual-card{position:relative;min-width:0;padding:30px 30px 25px;background:linear-gradient(140deg,#17263ed9,#080f1deb);border:1px solid #8099b747;border-radius:16px;box-shadow:inset 0 0 0 6px #080f1c44,inset 0 0 0 7px #94adce12;backdrop-filter:blur(8px);overflow:hidden}
+.ritual-card:before{content:'';position:absolute;right:-45px;top:-45px;width:230px;height:230px;background:url('/constellation.svg') center/contain;opacity:.25;pointer-events:none}
+.ritual-heading{display:flex;align-items:center;gap:22px;padding-bottom:23px;margin-bottom:20px;border-bottom:1px solid #93aac52e;position:relative}
+.ritual-number{font:italic 64px/.95 Georgia,serif;letter-spacing:-4px;background:linear-gradient(140deg,#b8cbe6,#617da6 45%,#b6cce8 65%,#476286);background-clip:text;-webkit-text-fill-color:transparent;flex-shrink:0}
+.ritual-kicker{font-size:8px!important;letter-spacing:2px;text-transform:uppercase;margin:0 0 8px;color:#9eb0c9!important}
+.ritual-heading h3{font:25px/1.25 Georgia,serif;margin:0;color:#d0daea;letter-spacing:-.5px}
+.book-mode .ritual-card ol,.galaxy-page .ritual-card ol{columns:2;column-gap:30px;padding:0 0 0 24px;margin:0;font-size:13px;line-height:1.65;color:#b9c7dc}
+.ritual-card li{padding:7px 0 7px 3px;break-inside:avoid;overflow-wrap:break-word}
+.ritual-card li::marker{font:italic 12px Georgia,serif;color:#7d9cc5}
+.book-mode .rsvp.book-page{padding-top:115px!important;padding-bottom:165px!important;gap:9vw}
+.book-mode .book-page .rsvp-panel{max-width:550px;justify-self:end;width:100%}
+.book-mode .rsvp-panel .button{border-radius:24px}
+.book-mode .book-arriving:after{animation:none}
+.book-turning .book-viewport:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:5;background:linear-gradient(100deg,transparent 35%,#afcaef18 49%,#0005 53%,transparent 72%);animation:turn-light .75s ease both}
+@keyframes turn-light{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes celestial-wheel{to{transform:rotate(360deg)}}
+@keyframes foil-shimmer{0%,70%{transform:translateX(-120%);opacity:0}80%{opacity:.7}100%{transform:translateX(120%);opacity:0}}
+@keyframes portrait-arrival{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
+@media(max-width:1100px){.book-mode .ritual-card ol{columns:1}.ritual-heading h3{font-size:23px}}
+@media(max-width:900px){
+  .book-mode header{height:58px;min-height:58px;padding:0 20px}
+  .book-mode header:after{left:20px;right:20px}
+  .book-mode .motion-toggle{top:8px;right:87px;font-size:9px}
+  .book-mode #invitation-book{width:100%;height:100%;margin:0;border-radius:0;box-shadow:none}
+  .book-mode #invitation-book:before{width:9px}
+  .book-mode #invitation-book:after{inset:68px 12px 121px;border-radius:0}
+  .book-mode .book-page{padding:95px 28px 150px!important}
+  .book-mode .book-page:before{top:75px;left:50%;width:50px}
+  .book-mode .book-page:after{width:500px;right:-230px;top:70px;opacity:.2}
+  .book-ribbon{right:23px;top:58px;padding:11px 8px 21px;font-size:7px}
+  .book-controls{width:100%;margin:0;padding:15px 18px calc(11px + env(safe-area-inset-bottom,0px))}
+  .chapter-tabs{gap:7px;margin-bottom:7px}.chapter-tab{min-height:35px;min-width:35px;padding:7px;font-size:9px}
+  .book-arrow{min-width:80px;padding:10px 14px;min-height:44px;font-size:11px;gap:9px}
+  .book-position p{font-size:11px;letter-spacing:.3px}.book-position>span{font-size:8px;letter-spacing:0}
+  .book-mode .hero.book-page{padding:100px 30px 145px!important;gap:35px}
+  .book-mode .hero .portrait-stage{width:min(68vw,290px);max-width:none;padding:9px;margin:0 10px}
+  .book-mode .hero .portrait{height:auto;aspect-ratio:3/4;border-radius:85px 85px 10px 10px}
+  .book-mode .hero .portrait-stage:before,.book-mode .hero .portrait-stage:after{border-radius:95px 95px 15px 15px}
+  .book-mode .hero .frame-crown{width:150px;top:-28px}
+  .book-mode .hero .portrait-ribbon{width:115px;left:-33px;bottom:-30px}
+  .book-mode .hero h1{font-size:clamp(52px,13.5vw,80px);letter-spacing:-2px;margin-bottom:17px}
+  .book-mode .hero .pretitle{font-size:15px;margin:18px 0 14px}
+  .book-mode .hero .surname{font-size:9px;letter-spacing:2.4px}
+  .book-mode .hero .hero-bottom{margin:18px 0;gap:18px}
+  .book-mode .hero .eighteen{font-size:49px}
+  .book-mode .hero .hero-bottom p{font-size:11px}
+  .book-mode .hero .hero-actions{margin-top:20px;gap:10px}
+  .book-mode .hero .hero-actions .button{font-size:12px;padding:12px 22px}
+  .book-mode .hero-actions .text-link{font-size:11px}
+  .book-mode .welcome.book-page{padding-top:115px!important}
+  .book-mode .welcome h2{font-size:clamp(35px,9vw,48px)}
+  .book-mode .book-page h2{font-size:clamp(35px,9vw,46px);letter-spacing:-1px}
+  .book-mode .book-page .eyebrow{font-size:8px;letter-spacing:1.8px}
+  .book-mode .details.book-page,.book-mode .rsvp.book-page{gap:40px}
+  .book-mode .book-page .invitation-card{padding:35px 23px 25px;border-radius:14px}
+  .book-mode .attire.book-page{gap:8px}
+  .book-mode .attire-ribbon{top:90px;right:14px;width:80px}
+  .book-mode .traditions.book-page{padding:95px 24px 155px!important}
+  .book-mode .traditions h2{font-size:35px}
+  .book-mode .traditions #tradition-lists{grid-template-columns:1fr;gap:23px;margin-top:30px}
+  .ritual-card{padding:25px 22px;border-radius:14px}
+  .ritual-heading{gap:22px;padding-bottom:20px;margin-bottom:16px}
+  .ritual-number{font-size:60px}.ritual-heading h3{font-size:26px}
+  .book-mode .ritual-card ol,.galaxy-page .ritual-card ol{columns:1;font-size:14px;padding-left:23px;line-height:1.7}
+  .ritual-card li{padding:7px 0 7px 4px}
+  .book-mode .rsvp.book-page{padding-top:95px!important;padding-bottom:160px!important}
+  .book-mode .book-page .rsvp-panel{max-width:none}
+}
+@media(max-width:370px){
+  .book-mode .book-page{padding-left:22px!important;padding-right:22px!important}
+  .book-mode .hero.book-page{padding-left:24px!important;padding-right:24px!important}
+  .book-mode .hero .portrait-stage{width:220px;max-width:90%}
+  .book-mode .hero h1{font-size:48px}
+  .book-mode .traditions.book-page{padding-left:20px!important;padding-right:20px!important}
+  .ritual-card{padding:24px 18px}.ritual-heading{gap:17px}.ritual-heading h3{font-size:23px}
+  .book-arrow{min-width:70px;padding:10px 11px}
+  .book-controls{padding-left:12px;padding-right:12px}
+  .book-position p{font-size:10px}
+}
+html[data-effects=paused] .book-mode .book-page:after,html[data-effects=paused] .book-mode .eighteen:after{animation:none}
+@media(prefers-reduced-motion:reduce){.book-mode .book-page:after,.book-mode .eighteen:after,.book-mode .portrait-stage,.book-turning .book-viewport:after{animation:none!important}}

@@ -49,3 +49,5 @@ The organizer supports guest creation, search, invitation links, RSVP totals, an
 ## Interactive booklet
 
 The guest invitation is a six-page booklet with a 3D page-turn transition, previous/next controls, chapter tabs, a ribbon shortcut to RSVP, keyboard arrows, and horizontal swipes. Each page scrolls independently for long participant lists or RSVP names. Vertical gestures remain available for scrolling, and form data is preserved when changing chapters. Direct chapter links preserve the personal invitation token. Reduced motion and the effects pause control disable page-turn animation. Without JavaScript enhancement, the invitation remains a normal scrolling document.
+
+The booklet now occupies the full viewport with navigation overlaid at the edges. Chapters scroll internally when needed. All four debut tradition lists are displayed as open, numbered honor-roll cards; no accordion click is required.
