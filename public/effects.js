@@ -1,12 +1,16 @@
 const canvas = document.querySelector('#starfield');
 const ctx = canvas.getContext('2d');
+const meteorCanvas=document.createElement('canvas');
+meteorCanvas.className='meteor-layer';meteorCanvas.setAttribute('aria-hidden','true');
+document.body.append(meteorCanvas);
+const meteorCtx=meteorCanvas.getContext('2d');
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const toggle = document.querySelector('#motion-toggle');
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 let paused = motionPreference.matches;
 try { if (!motionPreference.matches) paused = localStorage.getItem('effects-paused') === 'true'; } catch {}
 let width = 0, height = 0, stars = [], particles = [], shooting = [], last = 0, elapsed = 0, frame;
-let pointer = { x: 0, y: 0 }, trailAt = 0, nextShooting = 5;
+let pointer = { x: 0, y: 0 }, trailAt = 0, nextShooting = 1.5 + Math.random()*2;
 let constellationAt = -Infinity;
 let softPointer = {x:0,y:0};
 const entranceAnimations = new Set();
@@ -16,6 +20,8 @@ function resize() {
   const ratio = Math.min(devicePixelRatio || 1, 1.5);
   canvas.width = width * ratio; canvas.height = height * ratio;
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  meteorCanvas.width=width*ratio;meteorCanvas.height=height*ratio;
+  meteorCtx.setTransform(ratio,0,0,ratio,0,0);
   const count = width < 700 ? 90 : 175;
   stars = Array.from({ length: count }, (_, i) => ({
     x: Math.random() * width, y: Math.random() * height,
@@ -50,6 +56,7 @@ function draw(time) {
   softPointer.x+=(pointer.x-softPointer.x)*follow;
   softPointer.y+=(pointer.y-softPointer.y)*follow;
   ctx.clearRect(0, 0, width, height);
+  meteorCtx.clearRect(0,0,width,height);
   for (const star of stars) {
     const x = star.x + (paused ? 0 : softPointer.x * star.depth * 9);
     const y = star.y + (paused ? 0 : softPointer.y * star.depth * 9);
@@ -65,16 +72,28 @@ function draw(time) {
     }
   }
   if (!paused) {
-    if (elapsed > nextShooting) { shooting.push({ x: width * (.3 + Math.random() * .7), y: Math.random() * height * .4, life: 1 }); nextShooting = elapsed + 7 + Math.random() * 9; }
-    for (const star of shooting) {
-      star.x -= dt * 300; star.y += dt * 150; star.life -= dt * .75;
-      ctx.globalAlpha = Math.max(0, star.life) * .38;
-      const gradient = ctx.createLinearGradient(star.x, star.y, star.x + 100, star.y - 50);
-      gradient.addColorStop(0, '#e1eeff'); gradient.addColorStop(1, '#729ee100');
-      ctx.strokeStyle = gradient; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(star.x, star.y); ctx.lineTo(star.x + 100, star.y - 50); ctx.stroke();
+    if(elapsed>nextShooting) {
+      const direction=Math.random()<.5?-1:1;
+      const speed=220+Math.random()*140;
+      shooting.push({x:Math.random()*width,y:Math.random()*height*.55,
+        vx:direction*speed,vy:speed*(.45+Math.random()*.4),age:0,
+        duration:1.6+Math.random()*1.1,tail:65+Math.random()*65});
+      shooting=shooting.slice(-2);
+      nextShooting=elapsed+3+Math.random()*5;
     }
-    shooting = shooting.filter(star => star.life > 0);
+    for(const star of shooting) {
+      star.age+=dt;star.x+=star.vx*dt;star.y+=star.vy*dt;
+      const fade=Math.max(0,Math.min(1,star.age/.3,(star.duration-star.age)/.6));
+      const speed=Math.hypot(star.vx,star.vy);
+      const tailX=star.x-star.vx/speed*star.tail,tailY=star.y-star.vy/speed*star.tail;
+      const gradient=meteorCtx.createLinearGradient(star.x,star.y,tailX,tailY);
+      gradient.addColorStop(0,'#dceaff');gradient.addColorStop(.2,'#88b6ecaa');gradient.addColorStop(1,'#729ee100');
+      meteorCtx.globalAlpha=fade*.55;meteorCtx.strokeStyle=gradient;meteorCtx.lineWidth=1.3;
+      meteorCtx.beginPath();meteorCtx.moveTo(tailX,tailY);meteorCtx.lineTo(star.x,star.y);meteorCtx.stroke();
+      meteorCtx.fillStyle='#eef6ff';meteorCtx.beginPath();meteorCtx.arc(star.x,star.y,1.6,0,Math.PI*2);meteorCtx.fill();
+    }
+    meteorCtx.globalAlpha=1;
+    shooting=shooting.filter(star=>star.age<star.duration);
     for (const particle of particles) {
       particle.x += particle.vx * dt; particle.y += particle.vy * dt; particle.vy += dt * 12; particle.life -= dt * .6;
       glint(particle.x, particle.y, particle.size, Math.max(0, particle.life));

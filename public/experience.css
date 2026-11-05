@@ -407,3 +407,6 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
 
 /* Center the tradition ornament within its column, including stacked phones. */
 .book-mode .ritual-crest{display:block;margin:24px auto 0}
+
+/* Sparse shooting stars cross above the pages without intercepting gestures. */
+.meteor-layer{position:fixed;inset:0;width:100%;height:100%;z-index:7;pointer-events:none}
