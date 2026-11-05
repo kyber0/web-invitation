@@ -12,17 +12,12 @@ function dismiss(){
   document.body.classList.remove('intro-open');
   if (hadFocus) (document.querySelector('.book-current h1, .book-current h2') || document.querySelector('h1')).focus({preventScroll:true});
   document.dispatchEvent(new Event('book:open'));
-  try{sessionStorage.setItem('opened','1')}catch{}
 }
 $('#intro').addEventListener('keydown', event => {
   if(event.key === 'Escape') dismiss();
-  if(event.key === 'Tab') {
-    if(event.shiftKey && document.activeElement === $('#skip')) {event.preventDefault();$('#open').focus();}
-    else if(!event.shiftKey && document.activeElement === $('#open')) {event.preventDefault();$('#skip').focus();}
-  }
+  if(event.key === 'Tab') {event.preventDefault();$('#open').focus();}
 });
-try{if(sessionStorage.getItem('opened'))dismiss()}catch{}
-$('#skip').onclick=dismiss;$('#open').onclick=()=>{$('#intro').classList.add('opening');setTimeout(dismiss,reduced?0:1600)};
+$('#open').onclick=()=>{$('#intro').classList.add('opening');setTimeout(dismiss,reduced?0:1600)};
 if(!reduced){document.body.classList.add('motion');const observer=new IntersectionObserver(items=>items.forEach(item=>{if(item.isIntersecting){item.target.classList.add('visible');observer.unobserve(item.target)}}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));}
 function countdown(){const seconds=Math.max(0,Math.floor((Date.parse('2026-12-26T17:00:00+08:00')-Date.now())/1000));$('#countdown').replaceChildren();for(const [label,value] of [['DAYS',Math.floor(seconds/86400)],['HRS',Math.floor(seconds/3600)%24],['MIN',Math.floor(seconds/60)%60],['SEC',seconds%60]]){const div=document.createElement('div'),b=document.createElement('b'),small=document.createElement('small');b.textContent=String(value).padStart(2,'0');small.textContent=label;div.append(b,small);$('#countdown').append(div)}}countdown();setInterval(countdown,1000);
 const calendar='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Cleveth Kate//Invitation//EN\r\nBEGIN:VEVENT\r\nUID:cleveth-kate-18-2026@invitation\r\nDTSTAMP:20261105T000000Z\r\nDTSTART:20261226T090000Z\r\nSUMMARY:Cleveth Kate’s 18th Birthday\r\nLOCATION:Argene Convention Center\\, Zone 3\\, Sagrada\\, Baao\\, Camarines Sur\r\nEND:VEVENT\r\nEND:VCALENDAR';

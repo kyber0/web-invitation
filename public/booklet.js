@@ -203,8 +203,9 @@ async function turn(target,{focus=true,animate=true}={}) {
   document.dispatchEvent(new CustomEvent('book:page',{detail:{index:current,id:pages[current].id}}));
 }
 
-const deepLink = pages.findIndex(page => `#${page.id}` === location.hash);
-current = deepLink >= 0 ? deepLink : 0;
+// Every fresh invitation opens on the cover, even after refreshing a later chapter.
+current = 0;
+history.replaceState(null,'',`${location.pathname}${location.search}#home`);
 pages.forEach((page, index) => {
   page.hidden = index !== current; page.inert = index !== current;
   page.classList.toggle('book-current', index === current);
