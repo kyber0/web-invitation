@@ -38,6 +38,20 @@ menu.addEventListener('click',event=>{if(event.target===menu)menu.close()});
 
 pages.forEach((page, index) => {
   page.classList.add('book-page');
+  const emblems = {
+    traditions:'M12 20V10M12 15C5 15 4 11 4 11S10 10 12 15M12 12C18 12 20 8 20 8S15 7 12 12M12 10C5 10 5 3 9 4Q12 0 15 4C19 3 19 10 12 10Z',
+    candles:'M8 21V10H16V21M6 21H18M12 8C7 6 12 1 12 1S17 6 12 8Z',
+    bluebills:'M3 7H21V19H3ZM6 10H7M17 16H18M12 10C8 10 8 16 12 16C16 16 16 10 12 10M7 4H17',
+    'wines-shots':'M7 2H17L18 9C18 16 6 16 6 9ZM12 14V22M8 22H16M7 8H17'
+  };
+  if(emblems[page.id]) {
+    const emblem=document.createElement('span');emblem.className='chapter-emblem';
+    emblem.setAttribute('aria-hidden','true');
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 24 24');
+    const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',emblems[page.id]);
+    svg.append(path);emblem.append(svg);page.querySelector('.ritual-intro').prepend(emblem);
+  }
   page.classList.remove('reveal');
   page.setAttribute('aria-label', `Page ${index + 1}: ${labels[index]}`);
   page.querySelector('h1, h2')?.setAttribute('tabindex', '-1');
@@ -260,3 +274,5 @@ for(const page of pages)contentObserver.observe(page.querySelector('.chapter-bod
 viewport.addEventListener('load', update, true);
 viewport.addEventListener('toggle', update, true);
 update();
+
+document.dispatchEvent(new Event('book:ready'));

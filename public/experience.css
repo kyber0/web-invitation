@@ -267,3 +267,101 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
   .contents-actions{flex-direction:column;gap:6px}
   .contents-close{order:-1}
 }
+
+
+/* Sapphire editorial finish: restrained silver, darker surfaces, clear rhythm. */
+.book-mode .chapter-body{position:relative}
+.book-mode .chapter-body>div{min-width:0}
+.book-mode .book-page{background:linear-gradient(110deg,#030711d9,#081223a3 55%,#030711c9)}
+.book-mode .book-page:after{opacity:.13}
+.book-mode .book-page h2{text-wrap:balance;line-height:1.12}
+.book-mode .book-page p{line-height:1.85}
+.book-mode .book-page .eyebrow{display:flex;align-items:center;gap:12px;line-height:1.6}
+.book-mode .book-page .eyebrow:before{content:'';width:22px;height:1px;background:#8da8cf80;flex-shrink:0}
+.book-mode .welcome .eyebrow{justify-content:center}
+.book-mode header .brand{font-style:italic;letter-spacing:-2px}
+.book-mode header .brand span{font-style:normal;letter-spacing:3px;padding-left:12px;border-left:1px solid #849cc740}
+.book-mode header nav a{transition:color .2s,background .2s}
+.book-mode header nav a[aria-current=location]{color:#e1eafb}
+.book-mode header .nav-rsvp{padding:8px 17px;border:1px solid #91a7cd45;border-radius:24px;background:#15243b66}
+.book-mode .hero h1{font-size:clamp(76px,8.3vw,132px);line-height:.98;letter-spacing:-4px}
+.book-mode .hero .pretitle{color:#a9bad3;font-size:17px}
+.book-mode .hero .hero-bottom{padding:20px 0;border-block:1px solid #8aa5cc26;max-width:370px}
+.book-mode .hero .portrait-stage{box-shadow:0 35px 80px -25px #000b;border-radius:130px 130px 18px 18px}
+.book-mode .hero .portrait-stage:after{inset:-16px;border-color:#9db4d333}
+.book-mode .hero .portrait-caption{font-size:8px;letter-spacing:2px;color:#dae4f4}
+.book-mode .hero .hero-actions .button,.book-mode .rsvp-panel .button{background:linear-gradient(130deg,#25456b,#12283f);color:#e0eafa;border:1px solid #9bb3d479;box-shadow:inset 0 1px #dceaff20,0 6px 20px #0003}
+.book-mode .button:active,.book-arrow:active:enabled{transform:translateY(1px)}
+.book-mode .book-page .invitation-card,.book-mode .ritual-card{background:radial-gradient(ellipse at var(--shine-x,50%) var(--shine-y,0%),#26446a38,transparent 65%),linear-gradient(145deg,#101e32f0,#070f1dea);border:1px solid #8ba4c34d!important;border-radius:16px;box-shadow:inset 0 0 0 6px #080f1c55,inset 0 0 0 7px #96acce16,0 24px 55px #0004}
+.book-mode .event-info small{font-size:9px;letter-spacing:3px;color:#92aacc}
+.book-mode .event-info h3{font-size:clamp(24px,2.3vw,32px);line-height:1.3;letter-spacing:-.5px}
+.book-mode .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:370px}
+.book-mode .countdown div{min-width:0;border:0;border-bottom:1px solid #9db5d65c;border-radius:8px 8px 0 0;background:linear-gradient(#233d602b,#0b172b70);padding:16px 4px}
+.book-mode .countdown b{font-variant-numeric:tabular-nums;font-size:34px;font-weight:400}
+.book-mode .countdown small{display:block;font-size:8px;margin-top:6px;letter-spacing:2px}
+.book-mode .swatches{gap:clamp(16px,3vw,35px);padding:18px 0}
+.book-mode .swatches span{padding-top:62px;min-width:48px;color:#b8c8df}
+.book-mode .swatches span:before{width:44px;height:44px;transition:transform .25s}
+.book-mode .attire-note{border-radius:0 12px 12px 0;max-width:440px}
+.chapter-emblem{display:grid;place-items:center;width:64px;height:64px;margin-bottom:25px;position:relative;color:#bdcfe8;border:1px solid #9bb4d340;border-radius:50%;background:radial-gradient(#28456b55,#07101d44);box-shadow:0 0 0 7px #90afd008,0 0 0 8px #90afd01c}
+.chapter-emblem svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.chapter-emblem:after{content:'\2727';position:absolute;right:-5px;top:-9px;font-size:19px;color:#bdd5f2;background:#07101d}
+.book-mode .ritual-intro h2{max-width:460px;font-size:clamp(40px,4.3vw,64px)}
+.book-mode .ritual-intro:after{content:none}
+.book-mode .ritual-note{color:#aebfd8!important}
+.book-mode .ritual-siblings a{border-radius:24px;background:#0b172755;transition:background .2s,border-color .2s,transform .2s}
+.book-mode .ritual-siblings a[aria-current=page]{background:linear-gradient(120deg,#233f62,#14263e);border-color:#aec6e075}
+.book-mode .tradition-chapter .ritual-card{padding:30px}
+.book-mode .tradition-chapter .ritual-card ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 26px;columns:auto;padding:0 0 0 24px;margin:0}
+.book-mode .ritual-card li{padding:11px 3px 11px 5px;border-bottom:1px solid #9ab2d21b;color:#c0cee1;font-size:13px;line-height:1.65;overflow-wrap:anywhere;transition:color .2s,background .2s}
+.book-mode .ritual-card li::marker{font:italic 12px Georgia,serif;color:#87a6cf}
+.book-mode .ritual-heading{gap:24px;padding-bottom:22px}
+.book-mode .ritual-heading h3{font-size:22px!important}
+.book-mode .chapter-end{border-top-color:#a1b8d32b;padding-top:28px}
+.book-mode .chapter-end strong{color:#c9d8ed;font-size:29px}
+.book-mode .chapter-end-instruction{font-size:11px;letter-spacing:.3px}
+.book-mode .book-controls{padding-top:15px}
+.book-mode .chapter-toolbar{width:fit-content;max-width:100%;gap:14px;padding:4px 10px 4px 5px;border:1px solid #7f99bd30;border-radius:40px;background:#091322e8;box-shadow:0 6px 22px #0003;margin-bottom:10px}
+.book-mode .contents-button{border-color:transparent;background:#1c304b88}
+.book-mode .chapter-tab{letter-spacing:0;min-width:32px;padding:7px 6px}
+.book-mode .chapter-tab[aria-current=page]{background:#29446780;border-radius:50%;text-shadow:none}
+.book-mode .chapter-tab:after{display:none}
+.book-mode .book-position p{line-height:1.45}
+.book-mode .book-position>span{margin-top:3px;color:#98abc7}
+.book-mode .book-arrow{background:#0c1a2de6;border-color:#91a9cb45}
+.book-mode .book-ribbon{display:none}
+.book-mode .welcome .chapter-body{min-height:min(470px,55dvh);justify-content:center}
+@media(hover:hover) and (pointer:fine){
+  .book-mode .ritual-card li:hover{color:#edf3fd;background:#375c8522}
+  .book-mode .ritual-siblings a:hover{transform:translateY(-2px)}
+  .book-mode .swatches span:hover:before{transform:translateY(-5px)}
+}
+@media(max-width:1100px){.book-mode .tradition-chapter .ritual-card ol{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .book-mode .hero h1{font-size:clamp(55px,14vw,82px);letter-spacing:-2.5px}
+  .book-mode .hero .pretitle{font-size:15px;max-width:none}
+  .book-mode .hero .hero-bottom{justify-content:center;margin:22px auto;max-width:320px;padding:15px 0}
+  .book-mode .hero .eyebrow{justify-content:center;font-size:8px;letter-spacing:1.4px}
+  .book-mode .hero .eyebrow:before{display:none}
+  .book-mode .hero .portrait-stage:after{inset:-12px}
+  .book-mode .hero .portrait-caption{font-size:6px;letter-spacing:1px}
+  .book-mode header .nav-rsvp{padding:6px 12px}
+  .book-mode .chapter-toolbar{gap:5px;padding:3px 7px 3px 3px;margin-bottom:7px}
+  .book-mode .chapter-tab{min-width:28px;min-height:32px;padding:6px 4px}
+  .book-mode .contents-button{min-height:34px;padding:7px 10px}
+  .book-mode .book-page .eyebrow{font-size:9px;letter-spacing:1.6px}
+  .book-mode .chapter-emblem{width:50px;height:50px;margin:6px 0 24px 8px}
+  .book-mode .ritual-intro h2{font-size:clamp(36px,9vw,48px);margin-top:18px}
+  .book-mode .tradition-chapter .chapter-body{gap:25px}
+  .book-mode .tradition-chapter .ritual-card{padding:25px 24px}
+  .book-mode .ritual-card li{font-size:14px;padding-block:12px}
+  .book-mode .countdown b{font-size:30px}
+  .book-mode .chapter-end strong{font-size:26px}
+  .book-mode .welcome .chapter-body{min-height:45dvh}
+}
+@media(max-width:370px){
+  .book-mode .chapter-toolbar{gap:3px;padding-right:5px}
+  .book-mode .chapter-tab{min-width:25px}
+  .book-mode .contents-button{padding-inline:8px}
+  .book-mode .tradition-chapter .ritual-card{padding:23px 20px}
+}

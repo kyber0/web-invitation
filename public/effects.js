@@ -7,6 +7,8 @@ let paused = motionPreference.matches;
 try { if (!motionPreference.matches) paused = localStorage.getItem('effects-paused') === 'true'; } catch {}
 let width = 0, height = 0, stars = [], particles = [], shooting = [], last = 0, elapsed = 0, frame;
 let pointer = { x: 0, y: 0 }, trailAt = 0, nextShooting = 5;
+let constellationAt = -Infinity;
+const entranceAnimations = new Set();
 
 function resize() {
   width = innerWidth; height = innerHeight;
@@ -75,6 +77,23 @@ function draw(time) {
     }
     particles = particles.filter(particle => particle.life > 0);
   }
+  // A brief, eighteen-star constellation responds to the dedication button.
+  const constellationAge = elapsed - constellationAt;
+  if (!paused && constellationAge >= 0 && constellationAge < 4) {
+    const fade = Math.min(1, constellationAge * 2, (4 - constellationAge) / 1.5);
+    const radius = Math.min(width * .36, height * .28, 260);
+    const points = Array.from({length:18}, (_,index) => {
+      const angle = index / 18 * Math.PI * 2 - Math.PI / 2;
+      return {x:width / 2 + Math.cos(angle) * radius, y:height * .43 + Math.sin(angle) * radius * .7};
+    });
+    ctx.strokeStyle='#a5c5ef';ctx.lineWidth=.65;ctx.globalAlpha=fade*.3;
+    ctx.beginPath();
+    points.forEach((point,index)=>{
+      if(index===0)ctx.moveTo(point.x,point.y);else ctx.lineTo(point.x,point.y);
+    });
+    ctx.closePath();ctx.stroke();
+    points.forEach((point,index)=>glint(point.x,point.y,index%3===0?2:1.2,fade));
+  }
   ctx.globalAlpha = 1;
   if (!paused && !document.hidden) frame = requestAnimationFrame(draw);
 }
@@ -84,7 +103,7 @@ function syncMotion() {
   document.documentElement.dataset.effects = paused ? 'paused' : 'playing';
   toggle.textContent = paused ? 'Play effects' : 'Pause effects';
   toggle.setAttribute('aria-pressed', String(paused));
-  if (paused) { particles = []; shooting = []; }
+  if (paused) { particles = []; shooting = []; constellationAt = -Infinity; entranceAnimations.forEach(animation=>animation.cancel()); entranceAnimations.clear(); }
   restart();
 }
 toggle.onclick = () => { paused = !paused; try { localStorage.setItem('effects-paused', paused); } catch {} syncMotion(); };
@@ -128,6 +147,7 @@ const sectionObserver = new IntersectionObserver(entries => {
 for (const section of document.querySelectorAll('#details, #traditions, #rsvp')) sectionObserver.observe(section);
 document.addEventListener('book:page', () => burst(width * .75, height * .35, 30));
 document.querySelector('#light-sky').onclick = () => {
+  if(!paused)constellationAt=elapsed;
   document.querySelector('#sky-message').textContent = paused ? 'A beautiful new chapter, written in the stars.' : 'Here’s to a night that shines as brightly as you.';
   for (let i = 0; i < 5; i++) burst(width * (.15 + Math.random() * .7), height * (.15 + Math.random() * .65), 25);
 };
@@ -142,4 +162,43 @@ new MutationObserver(() => {
     burst(rect.left + rect.width / 2, rect.top, 70);
   }
 }).observe(responseMessage, { childList: true, characterData: true, subtree: true });
+// Short, finite entrances leave content visible even if motion is cancelled.
+function welcomeChapter() {
+  entranceAnimations.forEach(animation=>animation.cancel());entranceAnimations.clear();
+  if(paused || document.body.classList.contains('intro-open'))return;
+  const page=document.querySelector('.book-current');
+  if(!page)return;
+  const elements=page.querySelectorAll('.chapter-body > div:not(.portrait-stage), .chapter-body > article');
+  elements.forEach((element,index)=>{
+    const animation=element.animate([
+      {opacity:.7,transform:'translateY(12px)'},
+      {opacity:1,transform:'translateY(0)'}
+    ],{duration:520,delay:index*70,easing:'cubic-bezier(.2,.7,.2,1)'});
+    entranceAnimations.add(animation);
+    animation.finished.then(()=>entranceAnimations.delete(animation),()=>entranceAnimations.delete(animation));
+  });
+}
+document.addEventListener('book:page',welcomeChapter);
+document.addEventListener('book:open',welcomeChapter);
+document.addEventListener('book:ready',welcomeChapter);
+// One paint per frame; touch scrolling never drives these pointer highlights.
+for(const card of document.querySelectorAll('.ritual-card,.invitation-card')) {
+  let highlightFrame=0, point;
+  card.addEventListener('pointermove',event=>{
+    if(paused || !finePointer.matches)return;
+    point={x:event.clientX,y:event.clientY};
+    if(highlightFrame)return;
+    highlightFrame=requestAnimationFrame(()=>{
+      highlightFrame=0;
+      if(paused)return;
+      const bounds=card.getBoundingClientRect();
+      card.style.setProperty('--shine-x',`${point.x-bounds.left}px`);
+      card.style.setProperty('--shine-y',`${point.y-bounds.top}px`);
+    });
+  },{passive:true});
+  card.addEventListener('pointerleave',()=>{
+    cancelAnimationFrame(highlightFrame);highlightFrame=0;
+    card.style.removeProperty('--shine-x');card.style.removeProperty('--shine-y');
+  });
+}
 resize(); syncMotion();
