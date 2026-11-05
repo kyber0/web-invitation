@@ -404,3 +404,6 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
   .book-mode #invitation-book .hero.book-page{padding-top:65px!important}
   .book-mode .book-page:before{top:20px}
 }
+
+/* Center the tradition ornament within its column, including stacked phones. */
+.book-mode .ritual-crest{display:block;margin:24px auto 0}
