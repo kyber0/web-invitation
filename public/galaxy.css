@@ -68,8 +68,8 @@ html[data-effects="paused"] .nebula{animation:none;will-change:auto}
 @media(max-width:900px){
   .galaxy-page{width:100%;min-width:0}
   .galaxy-page header{height:68px;padding:0 22px;gap:18px}
-  .galaxy-page nav{gap:20px;align-items:center}
-  .galaxy-page nav a:first-child{display:none}
+  .galaxy-page header nav{gap:20px;align-items:center}
+  .galaxy-page header nav a:first-child{display:none}
   .galaxy-page nav a{display:inline-flex;min-height:44px;align-items:center;font-size:11px}
   .galaxy-page .brand{font-size:25px;white-space:nowrap}
   .galaxy-page .brand span{margin-left:6px;font-size:9px}
@@ -157,7 +157,7 @@ html[data-effects="paused"] .nebula{animation:none;will-change:auto}
   .galaxy-page .close-portrait{position:absolute;top:10px;right:10px;float:none;width:44px;height:44px;margin:0}
 }
 @media(max-width:360px){
-  .galaxy-page header{padding:0 16px}.galaxy-page nav{gap:12px}
+  .galaxy-page header{padding:0 16px}.galaxy-page header nav{gap:12px}
   .galaxy-page .section,.galaxy-page .welcome{padding-left:20px;padding-right:20px}
   .galaxy-page .hero{padding-left:24px;padding-right:24px}
   .galaxy-page .invitation-card{padding-left:18px;padding-right:18px}

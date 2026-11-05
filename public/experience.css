@@ -10,7 +10,7 @@ body.book-mode{height:100dvh;min-height:0;display:block;background:#03060e}
 .book-mode .book-page{padding:110px max(6vw,40px) 155px!important;background:radial-gradient(ellipse at 80% 25%,#1732613d,transparent 50%),linear-gradient(90deg,#030812a1,#060b15d1 45%,#03081291);scroll-padding-block:110px 155px;isolation:isolate}
 .book-mode .book-page:before{position:fixed;top:85px;left:50%;right:auto;width:70px;height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,#bdd0ed75,transparent)}
 .book-mode .book-page:after{content:'';position:absolute;right:-100px;top:40px;width:min(650px,70vw);aspect-ratio:1;background:url('/constellation.svg') center/contain no-repeat;opacity:.22;pointer-events:none;z-index:-1;animation:celestial-wheel 120s linear infinite}
-.book-controls{position:fixed;inset:auto 0 0;z-index:8;width:100%;margin:0;padding:20px max(5vw,30px) calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#030813ec 25%,#030711fa 85%);pointer-events:none}
+.book-controls{display:block;font-size:12px;position:fixed;inset:auto 0 0;z-index:8;width:100%;margin:0;padding:20px max(5vw,30px) calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#030813ec 25%,#030711fa 85%);pointer-events:none}
 .book-controls>*{pointer-events:auto;max-width:1200px;margin-left:auto;margin-right:auto}
 .book-navigation{padding-top:5px}
 .chapter-tabs{gap:16px;margin-bottom:9px}

@@ -61,3 +61,13 @@ test('fullscreen layout preserves hidden chapter isolation', () => {
   assert.match(css,/\.book-mode \.book-page\[hidden\]\s*\{\s*display:none!important\s*\}/);
   assert.doesNotMatch(css,/\.book-mode \.book-page\s*\{[^}]*display:block!important/);
 });
+
+
+test('header navigation styling does not collapse the booklet dock or hide tradition links', () => {
+  for(const file of ['style.css','galaxy.css']) {
+    const css=readFileSync(new URL(`../public/${file}`,import.meta.url),'utf8');
+    assert.doesNotMatch(css,/(?:^|})\s*(?:\.galaxy-page\s+)?nav(?:\s+a:first-child)?\s*\{/);
+  }
+  const css=readFileSync(new URL('../public/experience.css',import.meta.url),'utf8');
+  assert.match(css,/\.book-controls\{display:block;/);
+});
