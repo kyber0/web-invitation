@@ -377,3 +377,20 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
 .book-mode .book-arrow,.book-mode .contents-button{transition:background .22s ease,border-color .22s ease,color .22s ease,opacity .22s ease,transform .22s ease}
 .book-mode .chapter-tab{transition:background .22s ease,color .22s ease}
 @media(prefers-reduced-motion:reduce){.book-mode .book-arrow,.book-mode .contents-button,.book-mode .chapter-tab{transition:none}}
+
+
+/* One line: back, chapter title, next, and contents. */
+.book-mode .book-controls{padding:8px max(16px,env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-bottom,0px));background:#050c18f5;border-top:1px solid #92acce26}
+.book-mode .chapter-toolbar,.book-mode #page-hint{display:none}
+.book-mode .book-navigation{display:grid;grid-template-columns:44px minmax(0,1fr) 44px 44px;gap:8px;max-width:900px;padding:0;align-items:center}
+.book-mode .book-position p{font-family:Arial,sans-serif;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;margin:0}
+.book-mode .book-arrow{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;font-size:18px}
+.book-mode .book-arrow>span{display:none}
+.book-mode .book-navigation .contents-button{width:44px;min-width:44px;height:44px;padding:0;font-size:0;border-radius:50%;border:1px solid #91a9cb45}
+.book-mode .book-navigation .contents-button:before{font-size:16px;margin:0}
+.book-mode .book-page{padding-bottom:95px!important;scroll-padding-bottom:95px}
+.book-mode #invitation-book:after{bottom:75px}
+.book-mode .sheet-front{box-shadow:none}
+.book-mode .sheet-back{box-shadow:none}
+.book-mode .sheet-front .book-page{background-color:#080f1d;contain:paint}
+@media(max-width:370px){.book-mode .book-controls{padding-left:10px;padding-right:10px}.book-mode .book-navigation{gap:5px}.book-mode .book-position p{font-size:10px}}

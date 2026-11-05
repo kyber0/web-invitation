@@ -24,7 +24,8 @@ let current = 0, busy = false, gesture;
 const coarsePointer = matchMedia('(pointer: coarse)');
 const toolbar = document.createElement('div');toolbar.className='chapter-toolbar';
 const menuButton = document.createElement('button');menuButton.className='contents-button';menuButton.textContent='Chapters';menuButton.setAttribute('aria-haspopup','dialog');
-tabs.before(toolbar);toolbar.append(menuButton,tabs);
+tabs.before(toolbar);toolbar.append(tabs);
+document.querySelector('.book-navigation').append(menuButton);
 const menu = document.createElement('dialog');menu.id='contents-dialog';menu.setAttribute('aria-labelledby','contents-title');
 const menuHeader=document.createElement('div');menuHeader.className='contents-heading';
 const menuTitle=document.createElement('h2');menuTitle.id='contents-title';menuTitle.textContent='Inside the invitation';
@@ -84,6 +85,7 @@ function update() {
   menuButton.disabled = busy;
   previous.disabled = current === 0 || busy;
   next.disabled = current === pages.length - 1 || busy;
+  next.setAttribute('aria-label',current<pages.length-1?`Next chapter: ${labels[current+1]}`:'Last chapter');
   next.querySelector('span').textContent = current === 0 ? 'Open book' : current === pages.length - 2 ? 'Your reply' : 'Next';
   const pageCaption = `${String(current + 1).padStart(2, '0')} / ${String(pages.length).padStart(2, '0')} · ${labels[current]}`;
   if (caption.textContent !== pageCaption) caption.textContent = pageCaption;
@@ -133,21 +135,20 @@ function prepareTurn(index) {
   const sheet=document.createElement('div');sheet.className='book-turn-sheet';sheet.inert=true;sheet.setAttribute('aria-hidden','true');
   const front=document.createElement('div');front.className='sheet-front';
   sheet.style.transformOrigin=forward?'left center':'right center';
-  const snapshot=old.cloneNode(true);
-  snapshot.removeAttribute('id');snapshot.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-  snapshot.classList.remove('book-current','book-arriving');snapshot.hidden=false;snapshot.inert=true;
-  front.append(snapshot);
+  // Turn the actual chapter: cloning a portrait or 18-name list at swipe onset
+  // forced layout and image rasterization right when the finger started moving.
+  const savedScroll=old.scrollTop;
+  front.append(old);
   const back=document.createElement('div');back.className='sheet-back';
   const monogram=document.createElement('span');monogram.textContent='CK';
   const mark=document.createElement('small');mark.textContent='A CHAPTER WRITTEN IN THE STARS';
   back.append(monogram,mark);sheet.append(front,back);
   const shadow=document.createElement('div');shadow.className='turn-cast-shadow';shadow.setAttribute('aria-hidden','true');
   if(!forward)shadow.style.background='linear-gradient(270deg,#000c,transparent 55%)';
-  viewport.append(shadow,sheet);snapshot.scrollTop=old.scrollTop;
-  old.style.visibility='hidden';
+  viewport.append(shadow,sheet);old.scrollTop=savedScroll;
   sheet.style.transform=sheetTransform(0,forward);
   book.classList.add('book-turning');
-  return {index,old,incoming,forward,sheet,shadow,progress:0};
+  return {index,old,incoming,forward,sheet,shadow,progress:0,paintedProgress:0};
 }
 
 function previewTurn(state,progress) {
@@ -155,7 +156,8 @@ function previewTurn(state,progress) {
   if(state.previewFrame)return;
   state.previewFrame=requestAnimationFrame(()=>{
     state.previewFrame=0;
-    state.sheet.style.transform=sheetTransform(state.progress,state.forward);
+    state.paintedProgress=state.progress;
+    state.sheet.style.transform=sheetTransform(state.paintedProgress,state.forward);
     state.shadow.style.opacity=String(Math.sin(state.progress*Math.PI)*.65);
   });
 }
@@ -165,13 +167,15 @@ async function finishTurn(state,commit,{focus=true}={}) {
   state.previewFrame=0;
   const end=commit?1:0;
   if(motionEnabled()) {
-    const duration=Math.max(160,680*Math.abs(end-state.progress));
-    const frames=turnFrames(state.progress,end,state.forward);
+    const start=state.paintedProgress;
+    const duration=Math.max(180,560*Math.abs(end-start));
+    const frames=turnFrames(start,end,state.forward);
     const timing={duration,easing:'cubic-bezier(.22,.61,.36,1)',fill:'forwards'};
     const animation=state.sheet.animate(frames.map(({offset,transform})=>({offset,transform})),timing);
     const shade=state.shadow.animate(frames.map(({offset,opacity})=>({offset,opacity})),timing);
     await Promise.allSettled([animation.finished,shade.finished]);
   }
+  viewport.append(state.old);
   state.sheet.remove();state.shadow.remove();
   state.old.style.removeProperty('visibility');state.incoming.style.removeProperty('visibility');
   if(commit) {
