@@ -38,8 +38,8 @@
 .motion-toggle{position:fixed;left:16px;bottom:18px;z-index:5;background:#091225d9;color:#c4d7f7;border:1px solid #91b1e14f;border-radius:30px;padding:9px 14px;font-size:10px;letter-spacing:.4px;backdrop-filter:blur(10px)}
 #portrait-dialog{border:1px solid #b7cdf5;padding:12px;background:#070d1c;max-width:min(90vw,700px);max-height:92dvh;overflow:auto;box-shadow:0 0 80px #20478955}#portrait-dialog::backdrop{background:#02050ce8;backdrop-filter:blur(14px)}#portrait-dialog img{display:block;width:100%;max-height:85dvh;object-fit:contain}.close-portrait{position:sticky;float:right;top:0;width:38px;height:38px;margin-bottom:-38px;border:1px solid #b4ccf5;background:#09142c;color:white;font-size:25px;z-index:2}
 @keyframes nebula-drift{to{transform:translate3d(3%,-2%,0) rotate(4deg)}}@keyframes star-glint{0%,100%{opacity:.35}50%{opacity:1}}@keyframes ribbon-sway{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(-8deg) translateY(-5px)}}@keyframes chain-sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(3deg)}}
-@media(min-width:701px) and (max-width:1000px){.galaxy-page .hero{padding-left:6%;padding-right:6%;gap:6%}.galaxy-page h1{font-size:88px}.galaxy-page .portrait{height:560px}.portrait-ribbon{width:150px;left:-55px}.galaxy-page .section{padding-left:6%;padding-right:6%}}
-@media(max-width:700px){.galaxy-page .hero{padding:40px 9% 80px;min-height:0;gap:65px}.chapter-crest{width:210px;margin:0 auto 15px}.galaxy-page .hero-copy{text-align:center}.galaxy-page .hero-copy>.eyebrow{font-size:9px;letter-spacing:2px}.galaxy-page .pretitle{margin:22px auto 15px;font-size:17px}.galaxy-page h1{font-size:clamp(76px,17vw,110px);letter-spacing:-4px}.galaxy-page .surname{font-size:10px;letter-spacing:3px}.galaxy-page .hero-bottom{justify-content:center;text-align:left;margin:20px 0}.galaxy-page .hero-index{left:9%;font-size:8px}.portrait-stage{max-width:430px;padding:9px}.galaxy-page .portrait{margin:0;height:470px;border-radius:100px 100px 10px 10px}.portrait-stage:before,.portrait-stage:after{border-radius:110px 110px 16px 16px}.frame-crown{width:170px;top:-32px}.portrait-ribbon{width:145px;left:-55px;bottom:-60px}.crystal-chain{left:-13px;top:65px;height:190px}.crystal-chain i:nth-child(4){top:175px}.galaxy-page .portrait-caption{font-size:8px;letter-spacing:2px;left:25px}.galaxy-page .section{padding:75px 8%}.galaxy-page .welcome{padding:65px 8%}.galaxy-page .details{gap:55px}.galaxy-page .countdown{justify-content:flex-start;gap:10px}.galaxy-page .countdown div{min-width:57px}.galaxy-page #tradition-lists{grid-template-columns:1fr;gap:14px;margin-top:35px}.galaxy-page summary{min-height:85px;font-size:22px}.attire-ribbon{left:auto;right:-35px;width:110px;top:35px;opacity:.4}.galaxy-page .attire{gap:15px}.galaxy-page .rsvp{gap:50px}.galaxy-page .invitation-card{padding:38px 24px 25px}.intro-title{margin:10px 0 20px}.intro-jewel{width:135px}.galaxy-page .envelope{height:220px}.envelope-ribbon{height:185px;width:125px;left:calc(50% - 62px)}.galaxy-page .footer-name{font-size:42px}.motion-toggle{font-size:9px;left:10px;bottom:18px;padding:9px 11px}.sky-button{font-size:16px}}
+
+
 html[data-effects="paused"] .galaxy-page *,html[data-effects="paused"] .galaxy-page *:before,html[data-effects="paused"] .galaxy-page *:after{animation-play-state:paused!important}html[data-effects="paused"] .galaxy-page .portrait{transform:none!important}html[data-effects="paused"] .galaxy-page .motion .reveal{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.galaxy-page *, .galaxy-page *:before,.galaxy-page *:after{animation:none!important;transition:none!important}.galaxy-page .portrait{transform:none!important}}
 body.intro-open{overflow:hidden}html[data-effects="paused"] .galaxy-page.motion .reveal{opacity:1;transform:none}
@@ -58,40 +58,116 @@ body.intro-open{overflow:hidden}html[data-effects="paused"] .galaxy-page.motion 
 .galaxy-page .motion-toggle{min-height:44px;bottom:max(12px,env(safe-area-inset-bottom))}
 .galaxy-page .floating-rsvp{min-height:44px;bottom:max(12px,env(safe-area-inset-bottom))}
 @keyframes galaxy-drift{from{transform:scale(1.02) translate3d(-1%,0,0)}to{transform:scale(1.1) translate3d(1%,1%,0)}}
-@media(max-width:700px){
-  .nebula{background-position:75% center;opacity:.95}
-  .galaxy-page .intro{background-position:75% center;min-height:100svh;padding:60px 15px 30px}
-  .galaxy-page .hero{display:flex;flex-direction:column;padding:55px 9% 70px;gap:45px}
-  .galaxy-page .portrait-stage{order:0;width:100%;max-width:365px}
-  .galaxy-page .hero-copy{order:1;width:100%}
-  .galaxy-page .portrait{height:clamp(340px,53svh,480px)}
-  .galaxy-page .portrait img{object-position:center 40%}
-  .galaxy-page .portrait-ribbon{width:125px;left:-37px;bottom:-38px}
-  .galaxy-page .hero-copy .chapter-crest{margin-bottom:10px}
-  .galaxy-page .hero h1{font-size:clamp(68px,17vw,104px)}
-  .galaxy-page .hero h1 br{display:none}
-  .galaxy-page .hero h1 em:before{content:' ';white-space:pre}
-  .galaxy-page .hero-copy>.eyebrow{font-size:8px;letter-spacing:1.6px}
-  .galaxy-page .pretitle{font-size:16px;max-width:none}
-  .galaxy-page .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:340px}
-  .galaxy-page .countdown div{min-width:0;padding:12px 3px}
-  .galaxy-page .countdown b{font-size:30px}
-  .galaxy-page .countdown small{letter-spacing:1px;font-size:8px}
-  .galaxy-page .portrait-view,.galaxy-page .close-portrait{width:44px;height:44px}
-  .galaxy-page summary{font-size:clamp(18px,5vw,23px);padding:20px 0;min-height:88px}
-  .galaxy-page details{padding:0 17px}
-  .galaxy-page .tradition-number{font-size:23px;min-width:28px}
-  .galaxy-page input:not([type=radio]),.galaxy-page select{font-size:16px;min-height:48px}
-  .galaxy-page .button{min-height:48px}
-  .galaxy-page .rsvp-panel fieldset label{padding:7px 0}
-  .galaxy-page .intro-title{font-size:clamp(24px,7vw,36px);text-align:center}
-  .galaxy-page .intro .eyebrow{font-size:9px;letter-spacing:2px;text-align:center}
-  .galaxy-page .intro-hint{text-align:center;font-size:8px;letter-spacing:2px}
-  .galaxy-page .envelope{max-width:310px;width:80vw}
-  .galaxy-page footer{padding-bottom:100px}
-}
-@media(max-width:360px){.galaxy-page .section{padding-left:7%;padding-right:7%}.galaxy-page .surname{letter-spacing:2px}.galaxy-page .intro-jewel{width:100px}.galaxy-page .envelope{height:200px}.galaxy-page h2{font-size:36px}}
-@media(max-height:580px) and (orientation:landscape){.galaxy-page .intro{padding:20px;justify-content:flex-start;overflow:auto}.intro-jewel,.intro-orbit{display:none}.galaxy-page .intro-title{font-size:26px;margin:5px}.galaxy-page .envelope{height:180px;margin:12px 0}.galaxy-page .envelope-ribbon{height:150px}.galaxy-page .intro-hint{margin-top:8px}}
+
+
+
 html[data-effects="paused"] .nebula{animation:none;will-change:auto}
 @media(prefers-reduced-motion:reduce){.nebula{animation:none;will-change:auto}}
-@media(max-width:700px){.galaxy-page .hero h1 br{display:initial}.galaxy-page .hero h1 em:before{content:none}}
+
+/* One mobile layout, from small phones through portrait tablets. */
+@media(max-width:900px){
+  .galaxy-page{width:100%;min-width:0}
+  .galaxy-page header{height:68px;padding:0 22px;gap:18px}
+  .galaxy-page nav{gap:20px;align-items:center}
+  .galaxy-page nav a:first-child{display:none}
+  .galaxy-page nav a{display:inline-flex;min-height:44px;align-items:center;font-size:11px}
+  .galaxy-page .brand{font-size:25px;white-space:nowrap}
+  .galaxy-page .brand span{margin-left:6px;font-size:9px}
+  .galaxy-page .hero{display:flex;flex-direction:column;align-items:center;gap:40px;min-height:0;padding:52px 28px 48px}
+  .galaxy-page .portrait-stage{order:0;width:calc(100% - 24px);max-width:350px;padding:9px;margin:0 12px}
+  .galaxy-page .portrait{margin:0;height:auto;aspect-ratio:3/4;max-height:470px;border-radius:94px 94px 12px 12px;will-change:auto;transform:none}
+  .galaxy-page .portrait>img{object-position:center 36%;height:100%;width:100%}
+  .galaxy-page .portrait-stage:before,.galaxy-page .portrait-stage:after{border-radius:105px 105px 18px 18px}
+  .galaxy-page .frame-crown{width:155px;top:-28px}
+  .galaxy-page .portrait-ribbon{width:112px;left:-30px;bottom:-28px}
+  .galaxy-page .crystal-chain{left:-11px;top:60px;height:165px}
+  .galaxy-page .crystal-chain i:nth-child(3){top:120px}
+  .galaxy-page .crystal-chain i:nth-child(4){display:none}
+  .galaxy-page .portrait-caption{left:40px;right:16px;bottom:19px;font-size:7px;letter-spacing:1.4px;text-align:center}
+  .galaxy-page .portrait-view{bottom:42px;right:10px;width:44px;height:44px}
+  .galaxy-page .frame-star{font-size:25px}
+  .galaxy-page .hero-copy{order:1;width:100%;max-width:430px;text-align:center;min-width:0}
+  .galaxy-page .chapter-crest{width:180px;margin:0 auto 15px}
+  .galaxy-page .chapter-crest img{width:80px;height:30px}
+  .galaxy-page .hero-copy>.eyebrow{font-size:9px;letter-spacing:1.7px;margin:0 auto}
+  .galaxy-page .pretitle{font-size:17px;margin:20px auto 14px;max-width:none}
+  .galaxy-page .hero h1{font-size:clamp(65px,16vw,92px);letter-spacing:-3px;line-height:1.02;margin-bottom:18px}
+  .galaxy-page .hero h1 br{display:initial}
+  .galaxy-page .hero h1 em:before{content:none}
+  .galaxy-page .surname{font-size:10px;letter-spacing:2.8px;margin:0 auto}
+  .galaxy-page .hero-bottom{justify-content:center;text-align:left;margin:18px 0;gap:20px}
+  .galaxy-page .hero-bottom p{padding-left:18px;font-size:12px}
+  .galaxy-page .eighteen{font-size:56px}
+  .galaxy-page .hero .text-link{font-size:9px;letter-spacing:1.4px;padding:12px 0}
+  .galaxy-page .hero-index{position:static;order:2;align-self:center;font-size:8px;letter-spacing:1.5px;margin-top:-15px}
+  .galaxy-page .section,.galaxy-page .welcome{width:100%;padding:60px 24px}
+  .galaxy-page .section h2,.galaxy-page .welcome h2{font-size:clamp(35px,8.8vw,50px);line-height:1.15;letter-spacing:-1px;margin:16px 0 24px}
+  .galaxy-page .section p,.galaxy-page .welcome p{font-size:14px;line-height:1.8;overflow-wrap:break-word}
+  .galaxy-page .eyebrow{font-size:9px;letter-spacing:2px}
+  .galaxy-page .details,.galaxy-page .attire,.galaxy-page .rsvp{display:grid;grid-template-columns:minmax(0,1fr);gap:42px}
+  .galaxy-page .details>div,.galaxy-page .attire>div,.galaxy-page .rsvp>div{width:100%;max-width:500px;justify-self:center}
+  .galaxy-page .invitation-card{padding:35px 22px 26px;width:100%;min-width:0}
+  .galaxy-page .event-info>div{padding:18px 0 24px}
+  .galaxy-page h3{font-size:23px;line-height:1.35;overflow-wrap:break-word}
+  .galaxy-page .card-jewel{width:125px;top:-24px}
+  .galaxy-page .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:340px;margin-top:25px}
+  .galaxy-page .countdown div{min-width:0;padding:12px 2px}
+  .galaxy-page .countdown b{font-size:30px}
+  .galaxy-page .countdown small{font-size:8px;letter-spacing:1px}
+  .galaxy-page .attire{gap:4px;overflow:clip}
+  .galaxy-page .attire-ribbon{left:auto;right:0;top:45px;width:82px;opacity:.35}
+  .galaxy-page .swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:320px}
+  .galaxy-page .swatches span{min-width:0;padding-top:50px;text-align:center}
+  .galaxy-page .swatches span:before{left:50%;transform:translateX(-50%)}
+  .galaxy-page .attire-note{padding:14px 16px}
+  .galaxy-page .traditions>p{margin-bottom:25px}
+  .galaxy-page #tradition-lists{grid-template-columns:minmax(0,1fr);gap:12px;margin-top:30px}
+  .galaxy-page details{padding:0 16px;min-width:0}
+  .galaxy-page summary{min-height:80px;padding:20px 0;font-size:clamp(18px,4.8vw,23px);line-height:1.35;gap:12px}
+  .galaxy-page .tradition-number{font-size:23px;min-width:26px;flex-shrink:0}
+  .galaxy-page summary:after{flex-shrink:0;font-size:22px}
+  .galaxy-page ol{columns:1;padding:0 0 18px 23px;margin:0;font-size:13px}
+  .galaxy-page li{padding:6px 0;overflow-wrap:anywhere}
+  .galaxy-page .rsvp-panel input:not([type=radio]),.galaxy-page .rsvp-panel select{font-size:16px;min-height:48px;max-width:100%}
+  .galaxy-page .rsvp-panel .button{width:100%;min-height:48px;letter-spacing:.6px}
+  .galaxy-page .rsvp-panel fieldset{min-width:0}
+  .galaxy-page .rsvp-panel fieldset label{min-height:44px;display:flex;align-items:center;gap:8px;margin:4px 0}
+  .galaxy-page .rsvp-panel input[type=radio]{width:18px;height:18px;flex-shrink:0;margin:0}
+  .galaxy-page .rsvp-panel legend{font-size:22px;line-height:1.4;max-width:100%}
+  .galaxy-page .sky-button{font-size:16px;max-width:100%;min-height:44px;padding:10px 0}
+  .galaxy-page footer{padding:50px 24px calc(100px + env(safe-area-inset-bottom,0px))}
+  .galaxy-page .footer-name{font-size:40px}
+  .galaxy-page .footer-jewel{width:145px}
+  .galaxy-page .floating-rsvp{display:flex;align-items:center;justify-content:center;right:12px;min-height:44px;padding:10px 18px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  .galaxy-page .motion-toggle{left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));min-height:44px;font-size:10px;padding:10px 12px}
+  .nebula{background-position:75% center;opacity:.95}
+  .galaxy-page .intro{height:100%;min-height:0;max-height:100dvh;padding:50px 20px 24px;overflow-y:auto;overflow-x:hidden;background-position:75% center;gap:0}
+  .galaxy-page .intro>*{flex-shrink:0}
+  .galaxy-page .intro-jewel{width:120px;height:42px;object-fit:contain}
+  .galaxy-page .intro-title{font-size:clamp(26px,7vw,36px);text-align:center;margin:12px 0 20px}
+  .galaxy-page .intro .eyebrow{font-size:9px;letter-spacing:1.7px;text-align:center;margin:0}
+  .galaxy-page .envelope{width:min(290px,calc(100vw - 64px));height:auto;aspect-ratio:1.5;margin:25px 0 22px}
+  .galaxy-page .envelope-ribbon{width:112px;height:175px;left:calc(50% - 56px)}
+  .galaxy-page .seal{top:0;width:55px;height:55px;font-size:20px}
+  .galaxy-page .envelope-label{font-size:11px;letter-spacing:.5px;bottom:12px;padding:3px 5px}
+  .galaxy-page .intro-hint{font-size:8px;letter-spacing:1.5px;text-align:center;margin:0}
+  .galaxy-page .skip{right:14px;top:10px;padding:10px;min-height:44px}
+  #portrait-dialog{width:calc(100vw - 24px);max-width:500px;max-height:calc(100dvh - 24px);padding:8px}
+  #portrait-dialog img{max-height:calc(100dvh - 50px)}
+  .galaxy-page .close-portrait{position:absolute;top:10px;right:10px;float:none;width:44px;height:44px;margin:0}
+}
+@media(max-width:360px){
+  .galaxy-page header{padding:0 16px}.galaxy-page nav{gap:12px}
+  .galaxy-page .section,.galaxy-page .welcome{padding-left:20px;padding-right:20px}
+  .galaxy-page .hero{padding-left:24px;padding-right:24px}
+  .galaxy-page .invitation-card{padding-left:18px;padding-right:18px}
+  .galaxy-page .surname{letter-spacing:2px}
+  .galaxy-page .portrait-ribbon{width:95px;left:-25px}
+}
+@media(max-height:650px) and (max-width:900px){
+  .galaxy-page .intro{justify-content:flex-start;padding-top:55px}
+  .galaxy-page .intro-jewel{width:90px;height:30px}
+  .galaxy-page .intro-title{font-size:26px;margin:8px 0 12px}
+  .galaxy-page .envelope{width:min(240px,calc(100vw - 64px));margin:16px 0}
+  .galaxy-page .envelope-ribbon{height:145px}
+}
