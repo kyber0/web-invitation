@@ -25,7 +25,7 @@ Add these environment variables to the Vercel project:
 - `APP_URL`: your exact canonical site origin, such as `https://your-invitation.vercel.app` (no trailing slash). Used for invitation links and origin validation.
 - `ADMIN_PASSWORD`: at least 16 characters. You can reuse the generated local value in `.env`.
 - `SESSION_SECRET`: at least 32 random characters. You can reuse the generated local value in `.env`.
-- `RSVP_DEADLINE`: `2026-11-19T23:59:59+08:00`.
+- `RSVP_DEADLINE`: `2026-12-26T23:59:59+08:00`.
 - `COOKIE_SECURE`: `true` for HTTPS deployment.
 
 Use a separate Supabase project and matching `APP_URL` for Preview deployments to avoid changing production guest data. `HOST` and `PORT` are local-development variables and are not needed on Vercel. `DATABASE_PATH` is obsolete.
@@ -45,3 +45,7 @@ The `.env` file, old local database directory, build output, and original portra
 ## Current scope
 
 The organizer supports guest creation, search, invitation links, RSVP totals, and CSV export. Guest editing/deletion and organizer overrides are future work. Guest links use random 192-bit tokens and should be shared privately. Participant names were transcribed from the original invitation images and should be reviewed before sending links. No music or QR check-in is included.
+
+## Interactive booklet
+
+The guest invitation is a six-page booklet with a 3D page-turn transition, previous/next controls, chapter tabs, a ribbon shortcut to RSVP, keyboard arrows, and horizontal swipes. Each page scrolls independently for long participant lists or RSVP names. Vertical gestures remain available for scrolling, and form data is preserved when changing chapters. Direct chapter links preserve the personal invitation token. Reduced motion and the effects pause control disable page-turn animation. Without JavaScript enhancement, the invitation remains a normal scrolling document.

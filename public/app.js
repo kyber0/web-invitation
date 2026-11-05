@@ -1,7 +1,7 @@
 import {traditions} from './traditions.js';
 const $=s=>document.querySelector(s), id=new URLSearchParams(location.search).get('invite');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const behindIntro = [...document.querySelectorAll('header, main, footer, .floating-rsvp')];
+const behindIntro = [...document.querySelectorAll('header, main, footer, .floating-rsvp, .book-controls')];
 behindIntro.forEach(element => element.inert = true);
 document.body.classList.add('intro-open');
 function dismiss(){
@@ -11,7 +11,8 @@ function dismiss(){
   $('#intro').inert = true;
   behindIntro.forEach(element => element.inert = false);
   document.body.classList.remove('intro-open');
-  if (hadFocus) document.querySelector('h1').focus({preventScroll:true});
+  if (hadFocus) (document.querySelector('.book-current h1, .book-current h2') || document.querySelector('h1')).focus({preventScroll:true});
+  document.dispatchEvent(new Event('book:open'));
   try{sessionStorage.setItem('opened','1')}catch{}
 }
 $('#intro').addEventListener('keydown', event => {
@@ -64,6 +65,7 @@ if(id) {
     const response=await fetch(`/api/invitation?id=${encodeURIComponent(id)}`),data=await response.json();
     if(!response.ok)throw Error(data.error);
     invitation=data;
+    document.querySelectorAll('.deadline-display').forEach(el=>el.textContent=new Intl.DateTimeFormat('en-US',{month:'long',day:'numeric',year:'numeric',timeZone:'Asia/Manila'}).format(new Date(data.deadline)));
     $('#welcome-name').textContent=`Dear ${data.name}, it would mean so much to celebrate this milestone with you.`;
     $('#reserved').textContent=`We have reserved ${data.seats} ${data.seats===1?'seat':'seats'} especially for you.`;
     $('#rsvp-loading').textContent=data.closed?'RSVP has closed. Please contact your host for changes.':`An invitation for ${data.name}`;

@@ -116,6 +116,7 @@ new IntersectionObserver(entries => {
 }, { threshold: 0 }).observe(document.querySelector('#rsvp'));
 const sectionLinks = [...document.querySelectorAll('header nav a')];
 const sectionObserver = new IntersectionObserver(entries => {
+  if (document.body.classList.contains('book-mode')) return;
   for (const entry of entries) {
     if (!entry.isIntersecting) continue;
     for (const link of sectionLinks) {
@@ -125,6 +126,7 @@ const sectionObserver = new IntersectionObserver(entries => {
   }
 }, { rootMargin: '-15% 0px -60% 0px' });
 for (const section of document.querySelectorAll('#details, #traditions, #rsvp')) sectionObserver.observe(section);
+document.addEventListener('book:page', () => burst(width * .75, height * .35, 30));
 document.querySelector('#light-sky').onclick = () => {
   document.querySelector('#sky-message').textContent = paused ? 'A beautiful new chapter, written in the stars.' : 'Here’s to a night that shines as brightly as you.';
   for (let i = 0; i < 5; i++) burst(width * (.15 + Math.random() * .7), height * (.15 + Math.random() * .65), 25);
