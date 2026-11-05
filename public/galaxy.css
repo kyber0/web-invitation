@@ -43,3 +43,55 @@
 html[data-effects="paused"] .galaxy-page *,html[data-effects="paused"] .galaxy-page *:before,html[data-effects="paused"] .galaxy-page *:after{animation-play-state:paused!important}html[data-effects="paused"] .galaxy-page .portrait{transform:none!important}html[data-effects="paused"] .galaxy-page .motion .reveal{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.galaxy-page *, .galaxy-page *:before,.galaxy-page *:after{animation:none!important;transition:none!important}.galaxy-page .portrait{transform:none!important}}
 body.intro-open{overflow:hidden}html[data-effects="paused"] .galaxy-page.motion .reveal{opacity:1;transform:none}
+
+/* A visible photographic galaxy remains present even when motion is paused. */
+.galaxy-page{background:#030714}
+.nebula{inset:-5%;z-index:0;background:linear-gradient(#03071520,#03071540),url('/galaxy-background.png') center/cover no-repeat;opacity:.88;animation:galaxy-drift 30s ease-in-out infinite alternate;will-change:transform}
+#starfield{z-index:1}
+.galaxy-page main,.galaxy-page header,.galaxy-page footer{z-index:2}
+.galaxy-page main{background:linear-gradient(90deg,transparent,#03081520 45%,transparent)}
+.galaxy-page .intro{background:linear-gradient(#03081445,#0308147a),url('/galaxy-background.png') center/cover no-repeat}
+.galaxy-page .welcome{background:linear-gradient(90deg,#060f2366,#0a1734c9,#060f2366)}
+.galaxy-page .section>div:not(.portrait-stage){min-width:0}
+.galaxy-page .section p{color:#c5cde0}
+.galaxy-page .hero-copy{text-shadow:0 2px 20px #000}
+.galaxy-page .motion-toggle{min-height:44px;bottom:max(12px,env(safe-area-inset-bottom))}
+.galaxy-page .floating-rsvp{min-height:44px;bottom:max(12px,env(safe-area-inset-bottom))}
+@keyframes galaxy-drift{from{transform:scale(1.02) translate3d(-1%,0,0)}to{transform:scale(1.1) translate3d(1%,1%,0)}}
+@media(max-width:700px){
+  .nebula{background-position:75% center;opacity:.95}
+  .galaxy-page .intro{background-position:75% center;min-height:100svh;padding:60px 15px 30px}
+  .galaxy-page .hero{display:flex;flex-direction:column;padding:55px 9% 70px;gap:45px}
+  .galaxy-page .portrait-stage{order:0;width:100%;max-width:365px}
+  .galaxy-page .hero-copy{order:1;width:100%}
+  .galaxy-page .portrait{height:clamp(340px,53svh,480px)}
+  .galaxy-page .portrait img{object-position:center 40%}
+  .galaxy-page .portrait-ribbon{width:125px;left:-37px;bottom:-38px}
+  .galaxy-page .hero-copy .chapter-crest{margin-bottom:10px}
+  .galaxy-page .hero h1{font-size:clamp(68px,17vw,104px)}
+  .galaxy-page .hero h1 br{display:none}
+  .galaxy-page .hero h1 em:before{content:' ';white-space:pre}
+  .galaxy-page .hero-copy>.eyebrow{font-size:8px;letter-spacing:1.6px}
+  .galaxy-page .pretitle{font-size:16px;max-width:none}
+  .galaxy-page .countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:340px}
+  .galaxy-page .countdown div{min-width:0;padding:12px 3px}
+  .galaxy-page .countdown b{font-size:30px}
+  .galaxy-page .countdown small{letter-spacing:1px;font-size:8px}
+  .galaxy-page .portrait-view,.galaxy-page .close-portrait{width:44px;height:44px}
+  .galaxy-page summary{font-size:clamp(18px,5vw,23px);padding:20px 0;min-height:88px}
+  .galaxy-page details{padding:0 17px}
+  .galaxy-page .tradition-number{font-size:23px;min-width:28px}
+  .galaxy-page input:not([type=radio]),.galaxy-page select{font-size:16px;min-height:48px}
+  .galaxy-page .button{min-height:48px}
+  .galaxy-page .rsvp-panel fieldset label{padding:7px 0}
+  .galaxy-page .intro-title{font-size:clamp(24px,7vw,36px);text-align:center}
+  .galaxy-page .intro .eyebrow{font-size:9px;letter-spacing:2px;text-align:center}
+  .galaxy-page .intro-hint{text-align:center;font-size:8px;letter-spacing:2px}
+  .galaxy-page .envelope{max-width:310px;width:80vw}
+  .galaxy-page footer{padding-bottom:100px}
+}
+@media(max-width:360px){.galaxy-page .section{padding-left:7%;padding-right:7%}.galaxy-page .surname{letter-spacing:2px}.galaxy-page .intro-jewel{width:100px}.galaxy-page .envelope{height:200px}.galaxy-page h2{font-size:36px}}
+@media(max-height:580px) and (orientation:landscape){.galaxy-page .intro{padding:20px;justify-content:flex-start;overflow:auto}.intro-jewel,.intro-orbit{display:none}.galaxy-page .intro-title{font-size:26px;margin:5px}.galaxy-page .envelope{height:180px;margin:12px 0}.galaxy-page .envelope-ribbon{height:150px}.galaxy-page .intro-hint{margin-top:8px}}
+html[data-effects="paused"] .nebula{animation:none;will-change:auto}
+@media(prefers-reduced-motion:reduce){.nebula{animation:none;will-change:auto}}
+@media(max-width:700px){.galaxy-page .hero h1 br{display:initial}.galaxy-page .hero h1 em:before{content:none}}

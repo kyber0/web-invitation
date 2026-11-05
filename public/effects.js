@@ -93,8 +93,8 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) cance
 addEventListener('resize', () => { resize(); restart(); }, { passive: true });
 addEventListener('pointermove', event => {
   pointer = { x: event.clientX / width - .5, y: event.clientY / height - .5 };
-  if (finePointer.matches && !paused && performance.now() - trailAt > 65) {
-    trailAt = performance.now(); burst(event.clientX, event.clientY, 1);
+  if (!paused && performance.now() - trailAt > 65) {
+    trailAt = performance.now(); burst(event.clientX, event.clientY, finePointer.matches ? 1 : 2);
   }
 }, { passive: true });
 addEventListener('pointerdown', event => { if (!event.target.closest('input, select, textarea')) burst(event.clientX, event.clientY, 12); }, { passive: true });
