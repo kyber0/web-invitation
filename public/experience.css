@@ -365,3 +365,8 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
   .book-mode .contents-button{padding-inline:8px}
   .book-mode .tradition-chapter .ritual-card{padding:23px 20px}
 }
+
+/* Keep vertical reading native while reserving horizontal drags for the book. */
+.book-mode .book-viewport,.book-mode .chapter-end{touch-action:pan-y pinch-zoom}
+.book-mode .book-page{touch-action:pan-y pinch-zoom}
+.book-mode .book-page img{-webkit-user-drag:none}

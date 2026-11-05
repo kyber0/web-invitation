@@ -221,9 +221,15 @@ document.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft') { event.preventDefault(); turn(current - 1); }
 });
 viewport.addEventListener('pointerdown',event=>{
-  if(!event.isPrimary||event.button!==0||busy||event.target.closest('input,select,textarea,button,a,summary,label'))return;
+  if(document.body.classList.contains('intro-open')||!event.isPrimary||event.button!==0||busy||event.target.closest('input,select,textarea,button:not(.chapter-end),a,summary,label'))return;
   gesture={x:event.clientX,y:event.clientY,id:event.pointerId,state:null};
 });
+// A completed drag on the continuation button must not also activate its click.
+let suppressSwipeClickUntil=0;
+viewport.addEventListener('click',event=>{
+  if(performance.now()<suppressSwipeClickUntil){event.preventDefault();event.stopImmediatePropagation();}
+},true);
+viewport.addEventListener('dragstart',event=>event.preventDefault());
 viewport.addEventListener('pointermove',event=>{
   if(!gesture||gesture.id!==event.pointerId)return;
   const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
@@ -232,7 +238,10 @@ viewport.addEventListener('pointermove',event=>{
     if(Math.abs(dx)<18||Math.abs(dx)<Math.abs(dy)*1.5||!motionEnabled())return;
     const index=clampPage(current+(dx<0?1:-1),pages.length);
     if(index===current)return;
-    busy=true;update();gesture.state=prepareTurn(index);viewport.setPointerCapture(event.pointerId);
+    // Capture only after horizontal intent, preserving ordinary button taps.
+    // Capture before the original touch target becomes inert/hidden.
+    viewport.setPointerCapture(event.pointerId);
+    busy=true;update();gesture.state=prepareTurn(index);
   }
   const state=gesture.state;
   previewTurn(state,dragProgress(dx,viewport.clientWidth,state.forward));
@@ -243,9 +252,13 @@ viewport.addEventListener('pointerup',event=>{
   if(viewport.hasPointerCapture(event.pointerId))viewport.releasePointerCapture(event.pointerId);
   const direction=swipeDirection(event.clientX-active.x,event.clientY-active.y);
   if(active.state) {
+    suppressSwipeClickUntil=performance.now()+400;
     const commit=direction===(active.state.forward?1:-1)||active.state.progress>.35;
     finishTurn(active.state,commit,{focus:false});
-  } else if(!window.getSelection()?.toString()&&direction)turn(current+direction,{focus:false});
+  } else if(!window.getSelection()?.toString()&&direction) {
+    suppressSwipeClickUntil=performance.now()+400;
+    turn(current+direction,{focus:false});
+  }
 });
 function cancelGesture() {
   const state=gesture?.state;
@@ -253,7 +266,10 @@ function cancelGesture() {
   if(state)finishTurn(state,false,{focus:false});
 }
 viewport.addEventListener('pointercancel',cancelGesture);
-viewport.addEventListener('lostpointercapture',cancelGesture);
+viewport.addEventListener('lostpointercapture',event=>{
+  // Descendant lost-capture events bubble during normal implicit capture transfer.
+  if(event.target===viewport && event.pointerId===gesture?.id)cancelGesture();
+});
 addEventListener('blur',cancelGesture);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelGesture()});
 addEventListener('hashchange', () => {
