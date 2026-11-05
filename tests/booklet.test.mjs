@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress} from '../public/booklet-state.js';
+import {clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress, turnFrames} from '../public/booklet-state.js';
 
 test('booklet stays on its cover and final page at navigation boundaries', () => {
   assert.equal(clampPage(-1, 6), 0);
@@ -70,4 +70,16 @@ test('header navigation styling does not collapse the booklet dock or hide tradi
   }
   const css=readFileSync(new URL('../public/experience.css',import.meta.url),'utf8');
   assert.match(css,/\.book-controls\{display:block;/);
+});
+
+
+test('turn release keeps the paper and shadow continuous in both directions',()=>{
+  for(const forward of [true,false])for(const start of [0,.25,.6,.95])for(const end of [0,1]) {
+    const frames=turnFrames(start,end,forward);
+    assert.equal(frames[0].transform,`rotateY(${pageRotation(start,forward)}deg)`);
+    assert.equal(frames[0].opacity,Math.sin(start*Math.PI)*.65);
+    assert.equal(frames.at(-1).transform,`rotateY(${pageRotation(end,forward)}deg)`);
+    assert.ok(Math.abs(frames.at(-1).opacity)<1e-12);
+    assert.ok(frames.every(frame=>frame.opacity>=0 && frame.opacity<=.65));
+  }
 });

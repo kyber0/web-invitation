@@ -27,3 +27,12 @@ export function pageHint({scrollable, atEnd, hasNext, nextLabel, touch}) {
   if (!hasNext) return 'Your place in the story · You’ve reached the last chapter';
   return touch ? `Swipe left for ${nextLabel} ←` : `Next: ${nextLabel} · Tap Next or press →`;
 }
+
+
+// Sample the same progress for the paper and its shadow, including drag release.
+export function turnFrames(start, end, forward, steps = 24) {
+  return Array.from({length:steps+1}, (_,index) => {
+    const progress=index===steps?end:start+(end-start)*index/steps;
+    return {offset:index/steps,transform:`rotateY(${pageRotation(progress,forward)}deg)`,opacity:Math.sin(progress*Math.PI)*.65};
+  });
+}

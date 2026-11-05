@@ -370,3 +370,10 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
 .book-mode .book-viewport,.book-mode .chapter-end{touch-action:pan-y pinch-zoom}
 .book-mode .book-page{touch-action:pan-y pinch-zoom}
 .book-mode .book-page img{-webkit-user-drag:none}
+
+/* Do not replay an entrance while the turning paper is revealing its destination. */
+.book-mode .hero .portrait-stage{animation:none}
+.book-turning .book-page:after,.book-turning .portrait-ribbon,.book-turning .crystal-chain,.book-turning .frame-star,.book-turning .eighteen:after{animation-play-state:paused!important}
+.book-mode .book-arrow,.book-mode .contents-button{transition:background .22s ease,border-color .22s ease,color .22s ease,opacity .22s ease,transform .22s ease}
+.book-mode .chapter-tab{transition:background .22s ease,color .22s ease}
+@media(prefers-reduced-motion:reduce){.book-mode .book-arrow,.book-mode .contents-button,.book-mode .chapter-tab{transition:none}}

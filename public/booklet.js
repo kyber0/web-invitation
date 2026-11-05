@@ -1,4 +1,4 @@
-import { clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress } from './booklet-state.js';
+import { clampPage, swipeDirection, visibleChapters, pageHint, pageRotation, dragProgress, turnFrames } from './booklet-state.js';
 
 const book = document.querySelector('#invitation-book');
 const pages = [...book.querySelectorAll(':scope > section')];
@@ -125,6 +125,7 @@ function sheetTransform(progress, forward) {
 }
 
 function prepareTurn(index) {
+  document.dispatchEvent(new Event('book:turnstart'));
   const old=pages[current],incoming=pages[index],forward=index>current;
   incoming.hidden=false;incoming.inert=true;old.inert=true;
   // Reset before the destination is revealed beneath the turning sheet.
@@ -151,23 +152,24 @@ function prepareTurn(index) {
 
 function previewTurn(state,progress) {
   state.progress=Math.max(0,Math.min(1,progress));
-  state.sheet.style.transform=sheetTransform(state.progress,state.forward);
-  state.shadow.style.opacity=String(Math.sin(state.progress*Math.PI)*.65);
+  if(state.previewFrame)return;
+  state.previewFrame=requestAnimationFrame(()=>{
+    state.previewFrame=0;
+    state.sheet.style.transform=sheetTransform(state.progress,state.forward);
+    state.shadow.style.opacity=String(Math.sin(state.progress*Math.PI)*.65);
+  });
 }
 
 async function finishTurn(state,commit,{focus=true}={}) {
+  cancelAnimationFrame(state.previewFrame);
+  state.previewFrame=0;
   const end=commit?1:0;
   if(motionEnabled()) {
-    const duration=Math.max(220,760*Math.abs(end-state.progress));
-    const animation=state.sheet.animate([
-      {transform:sheetTransform(state.progress,state.forward)},
-      {transform:sheetTransform(end,state.forward)},
-    ],{duration,easing:'cubic-bezier(.25,.65,.25,1)',fill:'forwards'});
-    const shade=state.shadow.animate([
-      {opacity:Number(state.shadow.style.opacity||0)},
-      {opacity:.55,offset:.4},
-      {opacity:0},
-    ],{duration,fill:'forwards'});
+    const duration=Math.max(160,680*Math.abs(end-state.progress));
+    const frames=turnFrames(state.progress,end,state.forward);
+    const timing={duration,easing:'cubic-bezier(.22,.61,.36,1)',fill:'forwards'};
+    const animation=state.sheet.animate(frames.map(({offset,transform})=>({offset,transform})),timing);
+    const shade=state.shadow.animate(frames.map(({offset,opacity})=>({offset,opacity})),timing);
     await Promise.allSettled([animation.finished,shade.finished]);
   }
   state.sheet.remove();state.shadow.remove();

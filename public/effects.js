@@ -8,6 +8,7 @@ try { if (!motionPreference.matches) paused = localStorage.getItem('effects-paus
 let width = 0, height = 0, stars = [], particles = [], shooting = [], last = 0, elapsed = 0, frame;
 let pointer = { x: 0, y: 0 }, trailAt = 0, nextShooting = 5;
 let constellationAt = -Infinity;
+let softPointer = {x:0,y:0};
 const entranceAnimations = new Set();
 
 function resize() {
@@ -45,10 +46,13 @@ function burst(x, y, count = 25) {
 function draw(time) {
   const dt = Math.min((time - last) / 1000 || 0, .04); last = time;
   if (!paused) elapsed += dt;
+  const follow=1-Math.exp(-dt*7);
+  softPointer.x+=(pointer.x-softPointer.x)*follow;
+  softPointer.y+=(pointer.y-softPointer.y)*follow;
   ctx.clearRect(0, 0, width, height);
   for (const star of stars) {
-    const x = star.x + (paused ? 0 : pointer.x * star.depth * 9);
-    const y = star.y + (paused ? 0 : pointer.y * star.depth * 9);
+    const x = star.x + (paused ? 0 : softPointer.x * star.depth * 9);
+    const y = star.y + (paused ? 0 : softPointer.y * star.depth * 9);
     glint(x, y, star.size, .3 + (Math.sin(elapsed * .7 + star.phase) + 1) * .3);
     if (!paused && finePointer.matches) {
       const px = (pointer.x + .5) * width, py = (pointer.y + .5) * height;
@@ -112,7 +116,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) cance
 addEventListener('resize', () => { resize(); restart(); }, { passive: true });
 addEventListener('pointermove', event => {
   pointer = { x: event.clientX / width - .5, y: event.clientY / height - .5 };
-  if (!paused && performance.now() - trailAt > 65) {
+  if (!paused && !document.querySelector('.book-turning') && performance.now() - trailAt > 65) {
     trailAt = performance.now(); burst(event.clientX, event.clientY, finePointer.matches ? 1 : 2);
   }
 }, { passive: true });
@@ -145,7 +149,7 @@ const sectionObserver = new IntersectionObserver(entries => {
   }
 }, { rootMargin: '-15% 0px -60% 0px' });
 for (const section of document.querySelectorAll('#details, #traditions, #rsvp')) sectionObserver.observe(section);
-document.addEventListener('book:page', () => burst(width * .75, height * .35, 30));
+// A turn already has its own visual motion; avoid a competing particle burst.
 document.querySelector('#light-sky').onclick = () => {
   if(!paused)constellationAt=elapsed;
   document.querySelector('#sky-message').textContent = paused ? 'A beautiful new chapter, written in the stars.' : 'Here’s to a night that shines as brightly as you.';
@@ -178,7 +182,9 @@ function welcomeChapter() {
     animation.finished.then(()=>entranceAnimations.delete(animation),()=>entranceAnimations.delete(animation));
   });
 }
-document.addEventListener('book:page',welcomeChapter);
+document.addEventListener('book:turnstart',()=>{
+  entranceAnimations.forEach(animation=>animation.cancel());entranceAnimations.clear();
+});
 document.addEventListener('book:open',welcomeChapter);
 document.addEventListener('book:ready',welcomeChapter);
 // One paint per frame; touch scrolling never drives these pointer highlights.
