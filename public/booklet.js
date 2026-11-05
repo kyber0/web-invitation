@@ -113,6 +113,8 @@ function sheetTransform(progress, forward) {
 function prepareTurn(index) {
   const old=pages[current],incoming=pages[index],forward=index>current;
   incoming.hidden=false;incoming.inert=true;old.inert=true;
+  // Reset before the destination is revealed beneath the turning sheet.
+  incoming.scrollTop=0;
   const sheet=document.createElement('div');sheet.className='book-turn-sheet';sheet.inert=true;sheet.setAttribute('aria-hidden','true');
   const front=document.createElement('div');front.className='sheet-front';
   sheet.style.transformOrigin=forward?'left center':'right center';
@@ -231,16 +233,30 @@ viewport.addEventListener('pointerup',event=>{
     finishTurn(active.state,commit,{focus:false});
   } else if(!window.getSelection()?.toString()&&direction)turn(current+direction,{focus:false});
 });
-viewport.addEventListener('pointercancel',()=>{
-  const state=gesture?.state;gesture=null;if(state)finishTurn(state,false,{focus:false});
-});
+function cancelGesture() {
+  const state=gesture?.state;
+  gesture=null;
+  if(state)finishTurn(state,false,{focus:false});
+}
+viewport.addEventListener('pointercancel',cancelGesture);
+viewport.addEventListener('lostpointercapture',cancelGesture);
+addEventListener('blur',cancelGesture);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelGesture()});
 addEventListener('hashchange', () => {
   const index = pages.findIndex(page => `#${page.id}` === location.hash);
   if (index >= 0) turn(index);
 });
 addEventListener('resize', update, { passive: true });
 new ResizeObserver(update).observe(viewport);
-new MutationObserver(update).observe(viewport, { childList: true, subtree: true });
+// Observe actual content, not the temporary page-turn clones. Coalesce countdown
+// and RSVP changes into one reading-progress measurement per animation frame.
+let readingFrame;
+function scheduleReadingUpdate() {
+  if(readingFrame)return;
+  readingFrame=requestAnimationFrame(()=>{readingFrame=0;updateReading()});
+}
+const contentObserver=new MutationObserver(scheduleReadingUpdate);
+for(const page of pages)contentObserver.observe(page.querySelector('.chapter-body'), {childList:true,subtree:true,characterData:true});
 viewport.addEventListener('load', update, true);
 viewport.addEventListener('toggle', update, true);
 update();

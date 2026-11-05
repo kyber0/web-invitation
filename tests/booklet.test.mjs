@@ -52,3 +52,12 @@ test('all four tradition chapters contain 18 names without JavaScript rendering'
     assert.doesNotMatch(section[1],/<details|<summary/);
   }
 });
+
+
+test('fullscreen layout preserves hidden chapter isolation', () => {
+  const css=readFileSync(new URL('../public/experience.css',import.meta.url),'utf8');
+  // The global [hidden] rule has lower specificity than fullscreen page styles.
+  // Keep an explicit chapter-level override so nine absolute pages cannot stack.
+  assert.match(css,/\.book-mode \.book-page\[hidden\]\s*\{\s*display:none!important\s*\}/);
+  assert.doesNotMatch(css,/\.book-mode \.book-page\s*\{[^}]*display:block!important/);
+});

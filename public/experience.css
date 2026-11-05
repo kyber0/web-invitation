@@ -197,7 +197,9 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
 @media(prefers-reduced-motion:reduce){.chapter-end.is-ready .chapter-end-instruction{animation:none}}
 
 /* Keep chapter layout separate from the full-width continuation prompt. */
-.book-mode .book-page{display:block!important}
+.book-mode .book-page:not([hidden]){display:block!important}
+/* Hidden chapters must beat every desktop/mobile page layout rule. */
+.book-mode .book-page[hidden]{display:none!important}
 .book-mode .book-page>.chapter-body{width:100%;min-width:0;max-width:1260px!important;margin:0 auto}
 .book-mode .hero .chapter-body,.book-mode .details .chapter-body,.book-mode .attire .chapter-body,.book-mode .rsvp .chapter-body,.book-mode .tradition-chapter .chapter-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(35px,6vw,100px);align-items:center}
 .book-mode .tradition-chapter .chapter-body,.book-mode .rsvp .chapter-body{align-items:start}
