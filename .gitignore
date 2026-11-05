@@ -5,3 +5,5 @@ data/
 node_modules/
 resources/*original*
 *.log
+dist/
+.vercel/

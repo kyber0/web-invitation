@@ -1,28 +1,45 @@
 # Cleveth Kate · Eighteen
 
-A bespoke black-and-blue birthday invitation, with a silent envelope opening, responsive portrait layout, countdown, attire guide, four tradition lists, map directions, personal invitation links, seat-limited RSVP, and password-protected organizer page.
+A bespoke black-and-blue birthday invitation with a silent envelope reveal, countdown, attire guide, tradition lists, personal guest links, seat-limited RSVP, and a private organizer page.
 
-## Run locally
+## Stack
 
-Requires Node.js 22.18 or newer. No package installation required.
+Vercel serves the static website and Node.js API functions. Supabase Postgres stores invitations, attendance responses, and shared login throttling. No SQLite or runtime filesystem writes are used. The browser talks only to our API; the Supabase secret stays on the server.
 
-1. Copy `.env.example` to `.env`.
-2. Set a strong `ADMIN_PASSWORD` and a random `SESSION_SECRET` of at least 32 characters.
-3. Run `npm start`.
-4. Open `http://localhost:3000`; organizer page: `/admin`.
+## 1. Prepare Supabase
 
-SQLite creates `data/invitation.sqlite` automatically. Back up this directory when using real guest data. `.env` and the database are ignored by Git. Organizer password is stored only in the local environment file, never in frontend code. Guest links contain random 192-bit tokens and must be shared privately.
+Create a Supabase project, then run `supabase/schema.sql` in its SQL Editor. It creates the guest table and login limiter, enables row-level security, and denies direct access by anonymous and authenticated browser roles. Only the server's secret key can access these tables. No public read policy is needed.
 
-## Environment
+From your Supabase project's API settings, get the Project URL and server secret key (`sb_secret_...`). Legacy service-role JWTs are also supported through `SUPABASE_SERVICE_ROLE_KEY`, but new secret keys are preferred. Never put either secret in browser code, GitHub, or a variable with a public/client prefix.
 
-See `.env.example`: `HOST`, `PORT`, `APP_URL`, `DATABASE_PATH`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `RSVP_DEADLINE`, `COOKIE_SECURE`. The RSVP cutoff is November 19, 2026 at 11:59:59 PM in the Philippines. Seat counts and the cutoff are enforced on the server.
+## 2. Import into Vercel
 
-## Deploy
+Import `kyber0/web-invitation`, branch `main`, with the project root set to the repository root. Choose the **Other** framework preset, Node.js **22.x**, build command `npm run build`, and output directory `dist`. The tracked `vercel.json` configures API routing, the organizer route, and security headers. No dependency installation is required.
 
-Use a persistent Node host with a durable disk for SQLite; this application cannot run on GitHub Pages. Set `APP_URL` to the HTTPS site URL, `HOST=0.0.0.0`, `COOKIE_SECURE=true`, and `DATABASE_PATH` to the persistent disk path. Supply secrets via your host's environment configuration. A hosted database provider has not been provisioned.
+Add these environment variables to the Vercel project:
 
-## Status
+- `SUPABASE_URL`: your Supabase Project URL, for example `https://YOUR_PROJECT.supabase.co`.
+- `SUPABASE_SECRET_KEY`: your server-only secret key.
+- `APP_URL`: your exact canonical site origin, such as `https://your-invitation.vercel.app` (no trailing slash). Used for invitation links and origin validation.
+- `ADMIN_PASSWORD`: at least 16 characters. You can reuse the generated local value in `.env`.
+- `SESSION_SECRET`: at least 32 random characters. You can reuse the generated local value in `.env`.
+- `RSVP_DEADLINE`: `2026-11-19T23:59:59+08:00`.
+- `COOKIE_SECURE`: `true` for HTTPS deployment.
 
-GitHub target: `kyber0/web-invitation`. Remote creation/push requires GitHub authentication and is not complete until verified. The initial organizer supports guest creation, search, invitation link copying, attendance totals, and CSV export. Guest editing, deletion, and organizer RSVP overrides are future work.
+Use a separate Supabase project and matching `APP_URL` for Preview deployments to avoid changing production guest data. `HOST` and `PORT` are local-development variables and are not needed on Vercel. `DATABASE_PATH` is obsolete.
 
-The original printed invitation is used only as a content reference. Review transcribed participant names before sending links. No music or digital check-in is included.
+Deploy, then open `/admin` and sign in using `ADMIN_PASSWORD`. Create a test invitation and verify its personal link, attendance submission, response update, and appearance in the organizer. Redeploy after changing environment variables. Once a custom domain is configured, update `APP_URL` before sending guest links.
+
+## Local development
+
+Requires Node.js 22.18 or newer. Copy `.env.example` to `.env`, fill in your Supabase URL/key and organizer secrets, and run `npm start`. Open `http://localhost:3000`; organizer: `/admin`. For local development set `APP_URL=http://localhost:3000` and `COOKIE_SECURE=false`.
+
+The `.env` file, old local database directory, build output, and original portrait backup are ignored by Git. Existing SQLite records are not automatically migrated; preserve `data/` if you entered real guests previously. New invitations are stored in Supabase.
+
+## Verification
+
+`npm test` runs integration tests against a local Supabase REST-contract fixture, including organizer authentication, shared login throttling, guest creation, RSVP edits, seat limits, deadline enforcement, serverless routing and parsed request bodies. `npm run build` generates the static deployment assets. Tests do not connect to a live Supabase project; the SQL schema and live Vercel deployment still require the smoke test above.
+
+## Current scope
+
+The organizer supports guest creation, search, invitation links, RSVP totals, and CSV export. Guest editing/deletion and organizer overrides are future work. Guest links use random 192-bit tokens and should be shared privately. Participant names were transcribed from the original invitation images and should be reviewed before sending links. No music or QR check-in is included.
