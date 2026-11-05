@@ -394,3 +394,13 @@ html[data-effects=paused] .chapter-end.is-ready .chapter-end-instruction{animati
 .book-mode .sheet-back{box-shadow:none}
 .book-mode .sheet-front .book-page{background-color:#080f1d;contain:paint}
 @media(max-width:370px){.book-mode .book-controls{padding-left:10px;padding-right:10px}.book-mode .book-navigation{gap:5px}.book-mode .book-position p{font-size:10px}}
+
+/* Header-free booklet: keep only the compact bottom navigation. */
+.book-mode #invitation-book .book-page{padding-top:55px!important;scroll-padding-top:55px}
+.book-mode .book-page:before{top:25px}
+.book-mode #invitation-book:after{top:16px}
+@media(max-width:900px){
+  .book-mode #invitation-book .book-page{padding-top:45px!important;scroll-padding-top:45px}
+  .book-mode #invitation-book .hero.book-page{padding-top:65px!important}
+  .book-mode .book-page:before{top:20px}
+}
