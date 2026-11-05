@@ -2,6 +2,8 @@
 
 A bespoke black-and-blue birthday invitation with a silent envelope reveal, countdown, attire guide, tradition lists, personal guest links, seat-limited RSVP, and a private organizer page.
 
+The guest theme is midnight galaxy, sapphire satin ribbons, and silver crystal ornaments. It includes animated stars, shooting stars, pointer stardust and constellation lines, a tilting framed portrait with full-screen viewing, scroll reveals, and celebratory star bursts. A persistent pause control and reduced-motion support keep the effects optional. Background animation stops while the page is hidden. Ribbon generation details are in `ASSETS.md`.
+
 ## Stack
 
 Vercel serves the static website and Node.js API functions. Supabase Postgres stores invitations, attendance responses, and shared login throttling. No SQLite or runtime filesystem writes are used. The browser talks only to our API; the Supabase secret stays on the server.
